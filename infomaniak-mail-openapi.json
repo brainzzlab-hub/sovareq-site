@@ -1,0 +1,2272 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API Reference - Developer tools",
+    "termsOfService": "https://www.infomaniak.com/en/legal/general-terms-and-conditions",
+    "contact": {
+      "name": "Infomaniak Support",
+      "url": "https://developer.infomaniak.com/",
+      "email": "support@infomaniak.com"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://developer.infomaniak.com/license"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.infomaniak.com"
+    }
+  ],
+  "paths": {
+    "/1/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "List products",
+        "description": "This endpoint allows you to retrieve all the products where the current user's has at least one right.",
+        "parameters": [
+          {
+            "description": "*Optional* : Allows loading additional data about a resource, which may include related resources.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "with",
+            "in": "query"
+          },
+          {
+            "description": "The account identifier",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "account_id",
+              "type": "integer",
+              "description": "Unique identifier of the `account` that is related to the resource `{name}`",
+              "example": 1234
+            },
+            "name": "account_id",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "customer_name",
+              "type": "string",
+              "description": "Customer name of the resource `{name}`",
+              "example": "My kDrive"
+            },
+            "name": "customer_name",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "fqdn",
+              "type": "string",
+              "example": "www.my-domain.ch"
+            },
+            "name": "fqdn",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "internal_name",
+              "type": "string",
+              "example": "My kDrive"
+            },
+            "name": "internal_name",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "product_id",
+              "type": "integer",
+              "description": "Unique identifier of the `product` that is related to the resource `{name}`",
+              "example": 1234
+            },
+            "name": "product_id",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "service_id",
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                6,
+                7,
+                10,
+                14,
+                15,
+                18,
+                23,
+                25,
+                26,
+                29,
+                30,
+                31,
+                34,
+                35,
+                37,
+                40,
+                43,
+                48,
+                50,
+                52,
+                58
+              ],
+              "type": "integer",
+              "description": "Unique identifier of the `service` that is related to the resource `{name}`",
+              "example": 40
+            },
+            "name": "service_id",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "service_name",
+              "enum": [
+                "ai_tools",
+                "backup",
+                "certificate",
+                "cloud",
+                "cloud_hd",
+                "custom_url",
+                "dedicated_server",
+                "domain",
+                "drive",
+                "e_ticketing",
+                "email_hosting",
+                "hosting",
+                "housing",
+                "invitation",
+                "jelastic",
+                "ksuite",
+                "mailing",
+                "nas",
+                "public_cloud",
+                "radio",
+                "swiss_backup",
+                "video",
+                "vod",
+                "web_hosting",
+                "website_builder"
+              ],
+              "type": "string",
+              "description": "Name of the service",
+              "example": "drive"
+            },
+            "name": "service_name",
+            "in": "query"
+          },
+          {
+            "$ref": "#/components/parameters/Return"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Skip"
+          },
+          {
+            "$ref": "#/components/parameters/Page",
+            "schema": {
+              "default": 1
+            }
+          },
+          {
+            "$ref": "#/components/parameters/PerPage",
+            "schema": {
+              "minimum": 1
+            }
+          },
+          {
+            "$ref": "#/components/parameters/OrderBy"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "$ref": "#/components/parameters/OrderFor",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/087adaad_Product"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 401",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "not_authorized"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>not_authorized</strong>: Triggered when the user is not authorized to access this resource.</note>",
+                              "example": "not_authorized"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 500",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "unexpected_error"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>unexpected_error</strong>: Triggered when something unknown happens.</note>",
+                              "example": "unexpected_error"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/mail_hostings/{mail_hosting_id}/mailboxes": {
+      "get": {
+        "tags": [
+          "Mailbox management"
+        ],
+        "summary": "List mailboxes",
+        "description": "This endpoint allows you to retrieve all the mailboxes for a given mail hosting.",
+        "operationId": "Mail/ServicesListMailboxes",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "search",
+              "type": "string"
+            },
+            "name": "search",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "filter_by",
+            "in": "query"
+          },
+          {
+            "description": "*Optional* : Allows loading additional data about a resource, which may include related resources.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "with",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "filter",
+              "maxItems": 99,
+              "type": "object",
+              "properties": {
+                "has_alias": {
+                  "title": "has_alias",
+                  "type": "boolean"
+                },
+                "has_anti_spam": {
+                  "title": "has_anti_spam",
+                  "type": "boolean"
+                },
+                "has_redirection": {
+                  "title": "has_redirection",
+                  "type": "boolean"
+                },
+                "has_responder": {
+                  "title": "has_responder",
+                  "type": "boolean"
+                },
+                "is_using_imap": {
+                  "title": "is_using_imap",
+                  "type": "boolean"
+                },
+                "is_using_pop3": {
+                  "title": "is_using_pop3",
+                  "type": "boolean"
+                },
+                "last_login_at": {
+                  "title": "last_login_at",
+                  "type": "integer",
+                  "description": "Timestamp `{name}` has been logged"
+                }
+              }
+            },
+            "name": "filter",
+            "in": "query"
+          },
+          {
+            "$ref": "#/components/parameters/Return"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Skip"
+          },
+          {
+            "$ref": "#/components/parameters/Page",
+            "schema": {
+              "default": 1
+            }
+          },
+          {
+            "$ref": "#/components/parameters/PerPage",
+            "schema": {
+              "minimum": 1
+            }
+          },
+          {
+            "$ref": "#/components/parameters/OrderBy",
+            "schema": {
+              "enum": [
+                "mailIDN",
+                "created_at"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "$ref": "#/components/parameters/OrderFor",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "example": "order_for[mailIDN]=asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/93e74a89_Mailbox"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Mailbox management"
+        ],
+        "summary": "Add a mailbox",
+        "description": "Creates a new mailbox in the mail hosting.",
+        "operationId": "Mail/ServicesAddAMailbox",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "*Optional* : Allows loading additional data about a resource, which may include related resources.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "with",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Request body",
+                "required": [
+                  "mailbox_name"
+                ],
+                "type": "object",
+                "properties": {
+                  "link_to_current_user": {
+                    "title": "link_to_current_user",
+                    "type": "boolean"
+                  },
+                  "mailbox_name": {
+                    "title": "mailbox_name",
+                    "maxLength": 64,
+                    "type": "string"
+                  },
+                  "note": {
+                    "title": "note",
+                    "maxLength": 80,
+                    "type": "string"
+                  },
+                  "random_delivery_host": {
+                    "title": "random_delivery_host",
+                    "type": "boolean",
+                    "nullable": true
+                  },
+                  "signature_model_id": {
+                    "title": "signature_model_id",
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "target": {
+                    "title": "target",
+                    "enum": [
+                      "current_user",
+                      "ksuite_user",
+                      "other_user"
+                    ],
+                    "type": "string",
+                    "description": "Specifies who has access to the mailbox during its creation.<note><strong>current_user</strong>: Only the current user has access to the mailbox.</note><note><strong>ksuite_user</strong>: All users who are part of the kSuite product can access the mailbox.</note><note><strong>other_user</strong>: All invited users can have access to the mailbox.</note>",
+                    "example": "current_user"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/93e74a89_CreatedMailbox"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Catchall not allow for starter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "catchall_not_allow_for_starter"
+                              ],
+                              "type": "string",
+                              "description": "Error code",
+                              "example": "catchall_not_allow_for_starter"
+                            },
+                            "description": {
+                              "enum": [
+                                "Catchall not allow for starter"
+                              ],
+                              "type": "string",
+                              "description": "Description of the error",
+                              "example": "Catchall not allow for starter"
+                            }
+                          },
+                          "description": "Error object"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Catchall not allow for starter": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "catchall_not_allow_for_starter",
+                        "description": "Catchall not allow for starter",
+                        "errors": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/mail_hostings/{mail_hosting_id}/mailboxes/{mailbox_name}": {
+      "get": {
+        "tags": [
+          "Mailbox management"
+        ],
+        "summary": "Display a mailbox",
+        "description": "Returns a variety of information about a single a Mailbox specified by the requested unique identifier.",
+        "operationId": "Mail/ServicesDisplayAMailbox",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          },
+          {
+            "description": "*Optional* : Allows loading additional data about a resource, which may include related resources.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "with",
+            "in": "query"
+          },
+          {
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "title": "unit",
+              "enum": [
+                "B",
+                "MB",
+                "kB"
+              ],
+              "type": "string",
+              "description": "Specifies the storage unit for the mailbox.<note><strong>b</strong>: Return the unit size in Bytes.</note><note><strong>mb</strong>: Return the unit size in Megabytes.</note><note><strong>kb</strong>: Return the unit size in Kilobytes.</note>",
+              "example": "B"
+            },
+            "name": "unit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/93e74a89_Mailbox"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Mailbox management"
+        ],
+        "summary": "Update a mailbox",
+        "description": "Updates a given mailbox.",
+        "operationId": "Mail/ServicesUpdateAMailbox",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Request body",
+                "type": "object",
+                "properties": {
+                  "authorized_senders": {
+                    "title": "authorized_senders",
+                    "type": "array",
+                    "items": {
+                      "title": "item",
+                      "type": "string"
+                    }
+                  },
+                  "blocked_senders": {
+                    "title": "blocked_senders",
+                    "type": "array",
+                    "items": {
+                      "title": "item",
+                      "type": "string"
+                    }
+                  },
+                  "has_mail_filtering": {
+                    "title": "has_mail_filtering",
+                    "type": "boolean"
+                  },
+                  "has_move_spam": {
+                    "title": "has_move_spam",
+                    "type": "boolean"
+                  },
+                  "has_responder": {
+                    "title": "has_responder",
+                    "type": "boolean"
+                  },
+                  "mail_filtering_folder_commercials": {
+                    "title": "mail_filtering_folder_commercials",
+                    "type": "string"
+                  },
+                  "mail_filtering_folder_social_networks": {
+                    "title": "mail_filtering_folder_social_networks",
+                    "type": "string"
+                  },
+                  "note": {
+                    "title": "note",
+                    "maxLength": 80,
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "show_config_modal": {
+                    "title": "show_config_modal",
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 403",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "access_denied"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>access_denied</strong>: Triggered the user do not have access to this resource.</note>",
+                              "example": "access_denied"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 500",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "cannot_update_object"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>cannot_update_object</strong>: Triggered when the entity cannot be updated.</note>",
+                              "example": "cannot_update_object"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Mailbox management"
+        ],
+        "summary": "Delete a mailbox",
+        "description": "Deletes a given mailbox.",
+        "operationId": "Mail/ServicesDeleteAMailbox",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Mailbox is smtpban",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "mailbox_is_ldap_locked",
+                                "mailbox_is_smtpban"
+                              ],
+                              "type": "string",
+                              "description": "Error code",
+                              "example": "mailbox_is_smtpban"
+                            },
+                            "description": {
+                              "enum": [
+                                "Mailbox is ldap locked",
+                                "Mailbox is smtpban"
+                              ],
+                              "type": "string",
+                              "description": "Description of the error",
+                              "example": "Mailbox is smtpban"
+                            }
+                          },
+                          "description": "Error object"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Mailbox is smtpban": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "mailbox_is_smtpban",
+                        "description": "Mailbox is smtpban",
+                        "errors": []
+                      }
+                    }
+                  },
+                  "Mailbox is ldap locked": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "mailbox_is_ldap_locked",
+                        "description": "Mailbox is ldap locked",
+                        "errors": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 500",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "cannot_delete_object"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>cannot_delete_object</strong>: Triggered when the entity cannot be deleted.</note>",
+                              "example": "cannot_delete_object"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Mailbox management"
+        ],
+        "summary": "Update a mailbox",
+        "description": "Updates a given mailbox.",
+        "operationId": "Mail/ServicesUpdateAMailbox",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Request body",
+                "type": "object",
+                "properties": {
+                  "authorized_senders": {
+                    "title": "authorized_senders",
+                    "type": "array",
+                    "items": {
+                      "title": "item",
+                      "type": "string"
+                    }
+                  },
+                  "blocked_senders": {
+                    "title": "blocked_senders",
+                    "type": "array",
+                    "items": {
+                      "title": "item",
+                      "type": "string"
+                    }
+                  },
+                  "has_mail_filtering": {
+                    "title": "has_mail_filtering",
+                    "type": "boolean"
+                  },
+                  "has_move_spam": {
+                    "title": "has_move_spam",
+                    "type": "boolean"
+                  },
+                  "has_responder": {
+                    "title": "has_responder",
+                    "type": "boolean"
+                  },
+                  "mail_filtering_folder_commercials": {
+                    "title": "mail_filtering_folder_commercials",
+                    "type": "string"
+                  },
+                  "mail_filtering_folder_social_networks": {
+                    "title": "mail_filtering_folder_social_networks",
+                    "type": "string"
+                  },
+                  "note": {
+                    "title": "note",
+                    "maxLength": 80,
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "show_config_modal": {
+                    "title": "show_config_modal",
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 403",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "access_denied"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>access_denied</strong>: Triggered the user do not have access to this resource.</note>",
+                              "example": "access_denied"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 500",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "cannot_update_object"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>cannot_update_object</strong>: Triggered when the entity cannot be updated.</note>",
+                              "example": "cannot_update_object"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/1/mail_hostings/{mail_hosting_id}/mailboxes/{mailbox_name}/forwarding_addresses": {
+      "get": {
+        "tags": [
+          "Mailboxes > Forwarding"
+        ],
+        "summary": "List forwarding",
+        "description": "Retrieves information about the forwarding configuration of a given mailbox.",
+        "operationId": "Mail/ServicesListForwarding",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/93e74a89_MailboxRedirection"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Mailboxes > Forwarding"
+        ],
+        "summary": "Update a forwarding",
+        "description": "Update a given mailbox forwarding.",
+        "operationId": "Mail/ServicesUpdateAForwarding",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Request body",
+                "type": "object",
+                "properties": {
+                  "has_dont_deliver": {
+                    "title": "has_dont_deliver",
+                    "type": "boolean",
+                    "description": "Indicates if the mailbox should delete emails locally after forwarding them"
+                  },
+                  "has_forward_spam": {
+                    "title": "has_forward_spam",
+                    "type": "boolean",
+                    "description": "Indicates if the mailbox should forward mail that are considered to be spam"
+                  },
+                  "is_enabled": {
+                    "title": "is_enabled",
+                    "type": "boolean",
+                    "description": "Indicates if the redirection is enabled on the mailbox.\\n Warning: setting it to false drop all the existing adresses"
+                  },
+                  "redirect_addresses": {
+                    "title": "redirect_addresses",
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "title": "item",
+                      "type": "string"
+                    },
+                    "description": "List of the redirection addresses where the mail are redirected in the mailbox, the maximum is set to 1 if you have a starter pack"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Too much redirections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "redirect_address_alias_or_mailboxname",
+                                "too_much_redirections"
+                              ],
+                              "type": "string",
+                              "description": "Error code",
+                              "example": "too_much_redirections"
+                            },
+                            "description": {
+                              "enum": [
+                                "Redirect address alias or mailboxname",
+                                "Too much redirections"
+                              ],
+                              "type": "string",
+                              "description": "Description of the error",
+                              "example": "Too much redirections"
+                            }
+                          },
+                          "description": "Error object"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Too much redirections": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "too_much_redirections",
+                        "description": "Too much redirections",
+                        "errors": []
+                      }
+                    }
+                  },
+                  "Redirect address alias or mailboxname": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "redirect_address_alias_or_mailboxname",
+                        "description": "Redirect address alias or mailboxname",
+                        "errors": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 500",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "cannot_update_object"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>cannot_update_object</strong>: Triggered when the entity cannot be updated.</note>",
+                              "example": "cannot_update_object"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Mailboxes > Forwarding"
+        ],
+        "summary": "Add a forwarding",
+        "description": "Adds a new forwarding address to the given mailbox",
+        "operationId": "Mail/ServicesAddAForwarding",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "description": "Request body of the called URI",
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Request body",
+                "required": [
+                  "redirect_address"
+                ],
+                "type": "object",
+                "properties": {
+                  "redirect_address": {
+                    "title": "redirect_address",
+                    "type": "string",
+                    "description": "Redirect address"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/93e74a89_CreateForwardingResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cannot get redirections addresses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "cannot_add_redirection",
+                                "cannot_get_redirections_addresses",
+                                "cannot_set_redirection_keep",
+                                "incorrect_redirect_address",
+                                "max_mailbox_redirection",
+                                "redirect_address_already_exists"
+                              ],
+                              "type": "string",
+                              "description": "Error code",
+                              "example": "cannot_get_redirections_addresses"
+                            },
+                            "description": {
+                              "enum": [
+                                "Cannot add redirection",
+                                "Cannot get redirections addresses",
+                                "Cannot set redirection keep",
+                                "Incorrect redirect address",
+                                "Max mailbox redirection",
+                                "Redirect address already exists"
+                              ],
+                              "type": "string",
+                              "description": "Description of the error",
+                              "example": "Cannot get redirections addresses"
+                            }
+                          },
+                          "description": "Error object"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "Cannot get redirections addresses": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "cannot_get_redirections_addresses",
+                        "description": "Cannot get redirections addresses",
+                        "errors": []
+                      }
+                    }
+                  },
+                  "Max mailbox redirection": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "max_mailbox_redirection",
+                        "description": "Max mailbox redirection",
+                        "errors": []
+                      }
+                    }
+                  },
+                  "Redirect address already exists": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "redirect_address_already_exists",
+                        "description": "Redirect address already exists",
+                        "errors": []
+                      }
+                    }
+                  },
+                  "Incorrect redirect address": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "incorrect_redirect_address",
+                        "description": "Incorrect redirect address",
+                        "errors": []
+                      }
+                    }
+                  },
+                  "Cannot add redirection": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "cannot_add_redirection",
+                        "description": "Cannot add redirection",
+                        "errors": []
+                      }
+                    }
+                  },
+                  "Cannot set redirection keep": {
+                    "summary": "Example",
+                    "value": {
+                      "result": "error",
+                      "error": {
+                        "code": "cannot_set_redirection_keep",
+                        "description": "Cannot set redirection keep",
+                        "errors": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Mailboxes > Forwarding"
+        ],
+        "summary": "Delete all forwardings",
+        "description": "Deletes all configured forwarding addresses of the given mailbox.",
+        "operationId": "Mail/ServicesDeleteAllForwardings",
+        "parameters": [
+          {
+            "description": "The unique identifier (ID) of the mail hosting to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            },
+            "name": "mail_hosting_id",
+            "in": "path"
+          },
+          {
+            "description": "The username (that is the part before the @) of the email address you want to request.",
+            "required": true,
+            "style": "simple",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            },
+            "name": "mailbox_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 404",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "object_not_found"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>object_not_found</strong>: Triggered when the asked entity is not accessible.</note>",
+                              "example": "object_not_found"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "title": "The error returned when the http code is 500",
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "cannot_delete_object"
+                              ],
+                              "type": "string",
+                              "description": "The error code returned, the <strong>description</strong> add details relative to this code.<note><strong>cannot_delete_object</strong>: Triggered when the entity cannot be deleted.</note>",
+                              "example": "cannot_delete_object"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "More details about the error",
+                              "example": "Something wrong, additional information about the error code"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "oAuth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://login.infomaniak.com/authorize",
+            "tokenUrl": "https://login.infomaniak.com/token"
+          }
+        }
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
