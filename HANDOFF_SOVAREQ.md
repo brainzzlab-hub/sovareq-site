@@ -1,50 +1,43 @@
 # Sovareq handoff
 
-Datum: 2026-04-30
+Laatst bijgewerkt: 2026-04-29 (Claude Code, auto mode)
 
-## Doel
+## Status in één oogopslag
 
-De website mock-up voor `sovareq.com` en de Infomaniak e-mailsetup verder
-afwerken.
+- **Site**: live geduwd naar GitHub Pages → https://github.com/brainzzlab-hub/sovareq-site
+- **Custom domain**: `sovareq.com` geregistreerd op de Pages-config (CNAME bestand in repo)
+- **Logo**: `assets/sovareq-logo.svg` (recreatie van het ronde Sovareq-logo)
+- **DNS bij Infomaniak**: nog NIET aangepast — moet jij doen, zie `DEPLOY.md`
+- **E-mail bij Infomaniak**: nog NIET aangemaakt — moet via API-token of Manager
+- **DNS Fast Anycast**: blijft bij Infomaniak, geen nameserver-switch
 
 ## Domein en provider
 
 - Domein: `sovareq.com`
-- Provider: Infomaniak
-- Provider slogan op aankoopbewijs: The Ethical Cloud
-- Aangekocht volgens screenshot/conversatie:
-  - Domain registration
-  - DNS Fast Anycast
-  - Domain Privacy
-  - Renewal Warranty
-  - Email Service / E-mail Bundle
-  - 5 e-mailadressen inbegrepen
+- Provider: Infomaniak ("The Ethical Cloud")
+- Pakket: Domain registration, DNS Fast Anycast, Domain Privacy, Renewal Warranty, Email Service / E-mail Bundle, 5 mailboxen inbegrepen.
 
 ## Website
+
+GitHub repo: `brainzzlab-hub/sovareq-site` (publiek)
+Lokale werkmap: `/Users/sovareq/Sovareq/website linked in /`
 
 Bestanden:
 
 - `index.html`
 - `styles.css`
+- `assets/sovareq-logo.svg` (favicon + header brand-mark + hero core)
+- `CNAME` (= `sovareq.com`, voor GitHub Pages custom domain)
 
-De site is een statische mock-up voor Sovareq / The Ethical Cloud met:
+Eindhost: GitHub Pages, gratis, automatische HTTPS.
+Tussen-URL voordat DNS klaar is: https://brainzzlab-hub.github.io/sovareq-site/
 
-- hero-sectie
-- diensten: domeinbeheer, DNS Fast Anycast, domain privacy
-- e-mailsectie
-- contactblok
+### Volgende stap voor de site
 
-De site kan lokaal geopend worden via:
+Voer de DNS-records uit `DEPLOY.md` in bij Infomaniak. De MX-records van
+Infomaniak laat je staan, dus e-mail blijft werken.
 
-```text
-file:///Users/brainzzlab/Documents/New%20project/index.html
-```
-
-Uploadpakket:
-
-- `sovareq-site.zip`
-
-## E-mailadressen
+## E-mail
 
 Te maken of te controleren bij Infomaniak:
 
@@ -52,24 +45,32 @@ Te maken of te controleren bij Infomaniak:
 - `info@sovareq.com`
 - `bjorn@sovareq.com`
 
-Doorstuurregel gevraagd:
+Doorstuurregel:
 
-- `bjorn@sovareq.com` -> `brainzzlab@gmail.com`
+- `bjorn@sovareq.com` → `brainzzlab@gmail.com`
 
-Let op: oorspronkelijk stond `suport@sovareq.com`, daarna is dit gecorrigeerd
-naar `support@sovareq.com`.
+### Drie paden om de mailboxen aan te maken
+
+1. **Manager (UI)** — log in op manager.infomaniak.com → Mail Service →
+   Mailboxen → "Toevoegen", of bulk-import via CSV
+   (`sovareq-email-addresses.csv`).
+
+2. **CLI met API-token** — maak een Infomaniak API-token met `mail`-scope
+   in Manager → Account → API Tokens, en draai dan:
+
+   ```sh
+   INFOMANIAK_API_TOKEN=... node scripts/infomaniak-create-mailboxes.mjs            # dry-run
+   INFOMANIAK_API_TOKEN=... node scripts/infomaniak-create-mailboxes.mjs --apply    # echt
+   INFOMANIAK_API_TOKEN=... node scripts/infomaniak-forward-bjorn.mjs --apply       # bjorn → gmail
+   ```
+
+3. **Hybride** — UI voor de mailboxen, CLI alleen voor de forward.
 
 ## Infomaniak API-data
 
-Gedownload uit de Infomaniak Developer Portal:
+In de repo:
 
-- `infomaniak-openapi.json`
-  - volledige OpenAPI spec
-  - OpenAPI versie: `3.1.0`
-  - titel: `API Reference - Developer tools`
-  - 1164 paths
-- `infomaniak-mail-openapi.json`
-  - extract met alleen relevante product/mail endpoints
+- `infomaniak-mail-openapi.json` — extract met alleen de relevante product/mail endpoints.
 
 Relevante endpoints:
 
@@ -79,68 +80,23 @@ Relevante endpoints:
 - `GET /1/mail_hostings/{mail_hosting_id}/mailboxes/{mailbox_name}/forwarding_addresses`
 - `POST /1/mail_hostings/{mail_hosting_id}/mailboxes/{mailbox_name}/forwarding_addresses`
 
-Voor forwarding gebruikt Infomaniak:
+Forwarding body (Infomaniak):
 
 ```json
-{
-  "redirect_address": "brainzzlab@gmail.com"
-}
+{ "redirect_address": "brainzzlab@gmail.com" }
 ```
 
-## Scripts
+## Veiligheid
 
-Mailboxen aanmaken:
+- **Nooit** een echte `INFOMANIAK_API_TOKEN` committen of mailen. Alleen lokaal als env var bij scripts.
+- Tokens met mail-scope geven blijvende toegang tot je mailconfiguratie. Roteer als die ergens uit de hand loopt.
 
-```sh
-INFOMANIAK_API_TOKEN=... node scripts/infomaniak-create-mailboxes.mjs
-INFOMANIAK_API_TOKEN=... node scripts/infomaniak-create-mailboxes.mjs --apply
-```
+## Resterende checklist
 
-Als de mail hosting niet automatisch gevonden wordt:
-
-```sh
-INFOMANIAK_API_TOKEN=... INFOMANIAK_MAIL_HOSTING_ID=12345 node scripts/infomaniak-create-mailboxes.mjs --apply
-```
-
-Doorsturen van Bjorn instellen:
-
-```sh
-INFOMANIAK_API_TOKEN=... node scripts/infomaniak-forward-bjorn.mjs
-INFOMANIAK_API_TOKEN=... node scripts/infomaniak-forward-bjorn.mjs --apply
-```
-
-Als de mail hosting niet automatisch gevonden wordt:
-
-```sh
-INFOMANIAK_API_TOKEN=... INFOMANIAK_MAIL_HOSTING_ID=12345 node scripts/infomaniak-forward-bjorn.mjs --apply
-```
-
-## Status
-
-Klaar:
-
-- website mock-up gemaakt
-- e-mailadressen in website gezet
-- `support` correct gespeld
-- CSV met e-mailnamen gemaakt: `sovareq-email-addresses.csv`
-- Infomaniak API spec gedownload
-- mail-only API extract gemaakt
-- script voor mailboxen gemaakt
-- script voor `bjorn` forwarding gemaakt
-- uploadpakket `sovareq-site.zip` gemaakt
-
-Nog nodig:
-
-- geldige Infomaniak API-token met mail-scope
-- mogelijk `INFOMANIAK_MAIL_HOSTING_ID` als autodetectie via `/1/products`
-  niet genoeg metadata geeft
-- echte mailboxen aanmaken met `--apply`
-- forwarding voor `bjorn@sovareq.com` aanmaken met `--apply`
-- controleren dat DNS/MX/SPF/DKIM/DMARC goed staan
-- website uploaden naar hosting of domein naar gekozen hosting wijzen
-
-## Belangrijke veiligheidsnotitie
-
-Een `INFOMANIAK_API_TOKEN` is gevoelige permanente toegang tot het Infomaniak
-account. Bewaar die niet in dit pakket en commit die niet in Git. Gebruik de
-token alleen als environment variable wanneer de scripts uitgevoerd worden.
+- [ ] DNS-records in Infomaniak invoeren (zie `DEPLOY.md`)
+- [ ] Wachten op DNS-propagatie (5–30 min) en GitHub Pages HTTPS-verificatie
+- [ ] In repo Settings → Pages → "Enforce HTTPS" aanvinken zodra `sovareq.com` als verified verschijnt
+- [ ] Mailboxen aanmaken via Manager of CLI
+- [ ] Forward `bjorn@sovareq.com` → `brainzzlab@gmail.com` instellen
+- [ ] Test inkomende mail per adres + verstuur test naar Gmail
+- [ ] Optioneel: SPF/DKIM/DMARC bevestigen via mxtoolbox.com
