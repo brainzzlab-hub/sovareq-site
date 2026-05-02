@@ -3,154 +3,185 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sovareq | The Ethical Cloud</title>
-    <meta
-      name="description"
-      content="Sovareq — ethische cloud voor domeinbeheer, DNS en professionele e-mail."
-    >
+    <title>Sovareq | AI Governance</title>
+    <meta name="description"
+      content="Sovareq bouwt systemen waarin AI werkt binnen vaste grenzen. Herleidbaar. Privacygericht. Bestuurbaar.">
     <link rel="icon" type="image/svg+xml" href="assets/sovareq-logo.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    >
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+
+    <div class="site-overlay" aria-hidden="true">
+      <svg class="overlay-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 435">
+        <defs>
+          <clipPath id="belt-clip">
+            <circle cx="180" cy="180" r="164"/>
+          </clipPath>
+
+          <pattern id="belt-pat" x="0" y="104" width="230" height="84"
+                   patternUnits="userSpaceOnUse">
+            <rect class="bar-white" x="0"   y="0" width="36" height="84" fill="currentColor"/>
+            <rect class="bar-white" x="46"  y="0" width="36" height="84" fill="currentColor"/>
+            <rect class="bar-blue"  x="92"  y="0" width="36" height="84" fill="var(--color-accent)"/>
+            <rect class="bar-white" x="138" y="0" width="36" height="84" fill="currentColor"/>
+            <rect class="bar-white" x="184" y="0" width="36" height="84" fill="currentColor"/>
+            <animate id="belt-anim-el" attributeName="x"
+                     from="0" to="230" dur="10s"
+                     repeatCount="indefinite" calcMode="linear"
+                     begin="indefinite"/>
+          </pattern>
+        </defs>
+        <circle class="ring-outer" cx="180" cy="180" r="176"
+                fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle class="ring-inner" cx="180" cy="180" r="167"
+                fill="none" stroke="var(--color-accent)" stroke-width="4"/>
+        <g clip-path="url(#belt-clip)">
+          <line class="rail" x1="0" y1="200" x2="360" y2="200"
+                stroke="currentColor" stroke-width="2"/>
+          <line class="rail" x1="0" y1="232" x2="360" y2="232"
+                stroke="currentColor" stroke-width="2"/>
+          <rect x="0" y="104" width="360" height="84" fill="url(#belt-pat)"/>
+        </g>
+
+        <text class="overlay-text" x="180" y="417"
+              font-size="58" text-anchor="middle" letter-spacing="3"
+              fill="currentColor">SOVAREQ</text>
+      </svg>
+    </div>
+
     <header class="site-header">
       <a class="brand" href="#top" aria-label="Sovareq startpagina">
-        <img class="brand-mark" src="assets/sovareq-logo.svg" alt="" width="44" height="44">
-        <span>
-          <strong>Sovareq</strong>
-          <small>The Ethical Cloud</small>
-        </span>
+        <img class="brand-mark" src="assets/sovareq-logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Sovareq</span>
       </a>
-
       <nav class="main-nav" aria-label="Hoofdnavigatie">
-        <a href="#diensten">Diensten</a>
-        <a href="#email">E-mail</a>
-        <a href="#contact">Contact</a>
+        <a href="#sovaguard">Sovaguard</a>
+        <a href="#aanpak">Aanpak</a>
+        <a href="#contact" class="nav-cta">Contact</a>
       </nav>
     </header>
 
     <main id="top">
+
+      <!-- HERO -->
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">sovareq.com</p>
-          <h1>Ethische cloud voor domein, DNS en professionele e-mail.</h1>
-          <p class="lead">
-            Een rustige, betrouwbare online basis voor ondernemers die controle,
-            privacy en duidelijke support willen.
+          <span class="section-label">Sovareq — AI Governance</span>
+          <h1>AI mag helpen.<br>Nooit zonder bestuur.</h1>
+          <p class="hero-sub">
+            Sovareq bouwt systemen waarin AI werkt binnen vaste grenzen.
+            Elke actie herleidbaar. Privacy by design.
+            Bestuurbaar wanneer het er toe doet.
           </p>
-          <div class="hero-actions" aria-label="Snelle acties">
-            <a class="button primary" href="mailto:info@sovareq.com">Contacteer ons</a>
-            <a class="button secondary" href="#email">Bekijk e-mailadressen</a>
-          </div>
+          <a class="btn-primary" href="#contact">Neem contact op</a>
         </div>
-
-        <div class="cloud-panel" aria-label="Sovareq cloud status mock-up">
-          <div class="panel-top">
-            <span class="status-dot"></span>
-            <span>Cloud actief</span>
-          </div>
-          <div class="cloud-visual" aria-hidden="true">
-            <div class="node node-a"></div>
-            <div class="node node-b"></div>
-            <div class="node node-c"></div>
-            <img class="core-logo" src="assets/sovareq-logo.svg" alt="">
-          </div>
-          <dl class="metrics">
-            <div>
-              <dt>Domein</dt>
-              <dd>sovareq.com</dd>
-            </div>
-            <div>
-              <dt>E-mailboxen</dt>
-              <dd>3 actief</dd>
-            </div>
-            <div>
-              <dt>Privacy</dt>
-              <dd>Inbegrepen</dd>
-            </div>
-          </dl>
+        <div class="hero-visual" aria-hidden="true">
+          <img class="hero-logo" src="assets/sovareq-logo.svg" alt="">
         </div>
       </section>
 
-      <section class="section" id="diensten">
-        <div class="section-heading">
-          <p class="eyebrow">Diensten</p>
-          <h2>Alles wat de basis nodig heeft.</h2>
-        </div>
-
-        <div class="service-grid">
-          <article class="service-card">
-            <span class="icon domain" aria-hidden="true"></span>
-            <h3>Domeinbeheer</h3>
-            <p>
-              Registratie, verlenging en beheer van sovareq.com met heldere
-              eigenaarschap-informatie.
-            </p>
-          </article>
-          <article class="service-card">
-            <span class="icon dns" aria-hidden="true"></span>
-            <h3>DNS Fast Anycast</h3>
-            <p>
-              Snelle DNS-resolutie, voorbereid op webhosting, e-mailrouting en
-              toekomstige applicaties.
-            </p>
-          </article>
-          <article class="service-card">
-            <span class="icon privacy" aria-hidden="true"></span>
-            <h3>Domain privacy</h3>
-            <p>
-              Minder publieke blootstelling van domeingegevens en een nettere
-              professionele uitstraling.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="email-section" id="email">
-        <div>
-          <p class="eyebrow">E-mail</p>
-          <h2>Drie mailboxen voor Sovareq.</h2>
-          <p>
-            Deze adressen staan klaar in de webstek als contactpunten. Het
-            echte aanmaken gebeurt bij de domein- of mailprovider waar
-            sovareq.com beheerd wordt.
+      <!-- SOVAGUARD -->
+      <section class="product-section" id="sovaguard">
+        <div class="section-inner">
+          <span class="section-label">Product</span>
+          <h2>Sovaguard</h2>
+          <p class="product-sub">
+            Privacy-first LLM-proxy met PII-detectie en geketende audit-trail.
+            Gebouwd voor organisaties die AI inzetten met echte verantwoordelijkheid.
           </p>
-        </div>
 
-        <div class="email-list" aria-label="E-mailadressen">
-          <a href="mailto:support@sovareq.com">
-            <span>Support</span>
-            <strong>support@sovareq.com</strong>
-          </a>
-          <a href="mailto:info@sovareq.com">
-            <span>Info</span>
-            <strong>info@sovareq.com</strong>
-          </a>
-          <a href="mailto:bjorn@sovareq.com">
-            <span>Bjorn</span>
-            <strong>bjorn@sovareq.com</strong>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-label">PII-detectie</div>
+              <p>23 klassen — van IBAN en rijksregisternummer tot gezondheidsgegevens
+                en GPS-coördinaten. Valse positieven worden gefilterd via
+                checksum-validatie op formaat en structuur.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-label">Audit-keten</div>
+              <p>Elke gebeurtenis is HMAC-SHA256-geketend. Eén bit-flip breekt de
+                keten. Controleerbaar bewijs per run, per actie, per beslissing —
+                zonder handmatige tussenkomst.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-label">Governance</div>
+              <p>Wie mag wat doen, op basis van welke regel, met welk bewijs.
+                Discriminatie-risico-detectie met signalen relevant voor Art. 9 GDPR en CAO 109.
+                Gecontroleerde stop wanneer regels ontbreken of onduidelijk zijn.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-label">Vendor-agnostisch</div>
+              <p>Geen lock-in op LLM-provider. Geen hardcoded model-IDs.
+                Geen externe SDK-afhankelijkheden in productie-code.
+                De organisatie kiest zelf de connector en behoudt de controle.</p>
+            </div>
+          </div>
+
+          <div class="compliance-row">
+            <span class="compliance-tag">GDPR Art. 5 + 30</span>
+            <span class="compliance-tag">NIS2 BE</span>
+            <span class="compliance-tag">AI Act Art. 50</span>
+            <span class="compliance-tag">DORA</span>
+            <span class="compliance-tag">CAO 109</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- AANPAK -->
+      <section class="aanpak-section" id="aanpak">
+        <div class="aanpak-inner">
+          <div class="aanpak-head">
+            <span class="section-label">Aanpak</span>
+            <h2>Eerst gebruiken.<br>Dan bouwen.</h2>
+          </div>
+          <div class="aanpak-body">
+            <p>Sovareq bouwt geen software vanuit verkooplogica. Elk systeem
+              ontstaat uit eigen frictie — een probleem dat dagelijks onder druk
+              wordt getest voordat het relevant is voor anderen.</p>
+            <p>De kern is governance: wie mag wat doen, op basis van welke regel,
+              met welk bewijs. Een systeem is pas bruikbaar wanneer het op het
+              juiste moment kan stoppen. Niet doorgaan. Niet raden. Niet maskeren.
+              Een gecontroleerde stop is geen falen — het is een veiligheidslaag.</p>
+            <p>Elk onderdeel moet een reden hebben. Elk veld, elke log, elke
+              stopregel moet in de praktijk nut hebben. Software is pas volwassen
+              wanneer ze niet alleen werkt op een mooie dag, maar ook wanneer de
+              input rommelig is, de opdracht onduidelijk is of de druk hoog wordt.</p>
+            <blockquote class="aanpak-quote">
+              Software moet vertrouwen afdwingen. Niet beloven.
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="contact-section" id="contact">
+        <div class="section-inner">
+          <span class="section-label">Contact</span>
+          <h2>Rechtstreeks.</h2>
+          <a class="contact-email" href="mailto:bjorn@sovareq.com">
+            bjorn@sovareq.com
           </a>
         </div>
       </section>
 
-      <section class="contact-band" id="contact">
-        <div>
-          <p class="eyebrow">Contact</p>
-          <h2>Klaar om Sovareq online te zetten?</h2>
-        </div>
-        <a class="button primary" href="mailto:info@sovareq.com">info@sovareq.com</a>
-      </section>
     </main>
 
     <footer class="site-footer">
-      <span>Sovareq</span>
-      <span>The Ethical Cloud</span>
+      <span>Sovareq BV · België</span>
+      <span>Privacy by design</span>
+      <span><a href="mailto:bjorn@sovareq.com">bjorn@sovareq.com</a></span>
       <span>sovareq.com</span>
+      <span>Privacybeleid beschikbaar op aanvraag</span>
     </footer>
+
+    <script>
+      /* Start belt-animatie tenzij gebruiker prefers-reduced-motion heeft */
+      (function () {
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          var a = document.getElementById('belt-anim-el');
+          if (a) a.beginElement();
+        }
+      })();
+    </script>
   </body>
 </html>
