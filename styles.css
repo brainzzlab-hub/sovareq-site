@@ -448,7 +448,43 @@ h1, h2, h3, p, blockquote {
   letter-spacing: 0.05em;
 }
 
-/* ── 11b. Site-overlay ─────────────────────────────────────── */
+/* ── 11b. Metrics strip ────────────────────────────────────── */
+.metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--color-surface-sunken);
+  border-bottom: var(--border-thin);
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--section-pad-h);
+  border-right: var(--border-thin);
+}
+
+.metric-item:last-child {
+  border-right: none;
+}
+
+.metric-val {
+  font-family: var(--font-mono);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 700;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+}
+
+.metric-lbl {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-subtle);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+/* ── 11c. Site-overlay ─────────────────────────────────────── */
 .site-overlay {
   position: fixed;
   top: 50%;
@@ -483,6 +519,18 @@ h1, h2, h3, p, blockquote {
 
 /* ── 12. Responsive ────────────────────────────────────────── */
 @media (max-width: 900px) {
+  .metrics-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metric-item:nth-child(2) {
+    border-right: none;
+  }
+
+  .metric-item:nth-child(3),
+  .metric-item:nth-child(4) {
+    border-top: var(--border-thin);
+  }
 
   .hero {
     grid-template-columns: 1fr;
