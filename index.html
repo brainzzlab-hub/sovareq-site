@@ -24,10 +24,6 @@
             <rect class="bar-white" x="92"  y="0" width="36" height="84" fill="currentColor"/>
             <rect class="bar-blue"  x="138" y="0" width="36" height="84" fill="var(--color-accent)"/>
             <rect class="bar-white" x="184" y="0" width="36" height="84" fill="currentColor"/>
-            <animate id="belt-anim-el" attributeName="x"
-                     from="0" to="230" dur="10s"
-                     repeatCount="indefinite" calcMode="linear"
-                     begin="indefinite"/>
           </pattern>
         </defs>
         <circle class="ring-outer" cx="180" cy="180" r="176"
@@ -333,12 +329,19 @@
       var init = saved || (['nl','fr','en'].indexOf(browser) > -1 ? browser : 'nl');
       applyLang(init);
 
-      /* Belt animation */
+      /* Belt animation — 10s period, 230px tile */
       (function() {
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          var a = document.getElementById('belt-anim-el');
-          if (a) a.beginElement();
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var pat = document.getElementById('belt-pat');
+        if (!pat) return;
+        var start = performance.now();
+        function tick() {
+          var x = ((performance.now() - start) / 10000 * 230) % 230;
+          pat.setAttribute('patternTransform', 'translate(' + x.toFixed(2) + ',0)');
         }
+        /* rAF = smooth when visible; interval = keeps running in background */
+        (function loop() { tick(); requestAnimationFrame(loop); })();
+        setInterval(tick, 50);
       })();
     </script>
   </body>
