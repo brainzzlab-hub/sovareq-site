@@ -51,6 +51,7 @@
       <nav class="main-nav" aria-label="Navigatie">
         <a href="#sovaguard" data-i18n="nav.product">Sovaguard</a>
         <a href="#aanpak" data-i18n="nav.approach">Aanpak</a>
+        <button class="theme-btn" id="theme-btn" aria-label="Thema wisselen">◐</button>
         <div class="lang-toggle" role="group" aria-label="Taal / Langue / Language">
           <button class="lang-btn" data-lang="nl" aria-pressed="true">NL</button>
           <button class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
@@ -328,6 +329,26 @@
       var browser = (navigator.language || 'nl').slice(0, 2).toLowerCase();
       var init = saved || (['nl','fr','en'].indexOf(browser) > -1 ? browser : 'nl');
       applyLang(init);
+
+      /* Theme toggle */
+      (function() {
+        var btn = document.getElementById('theme-btn');
+        var html = document.documentElement;
+        var saved = null;
+        try { saved = localStorage.getItem('sq-theme'); } catch(e) {}
+        if (saved === 'light') html.setAttribute('data-theme', 'light');
+
+        if (btn) btn.addEventListener('click', function() {
+          var isLight = html.getAttribute('data-theme') === 'light';
+          if (isLight) {
+            html.removeAttribute('data-theme');
+            try { localStorage.setItem('sq-theme', 'dark'); } catch(e) {}
+          } else {
+            html.setAttribute('data-theme', 'light');
+            try { localStorage.setItem('sq-theme', 'light'); } catch(e) {}
+          }
+        });
+      })();
 
       /* Belt animation — 10s period, 230px tile */
       (function() {
