@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QUINTS | Sovareq</title>
+    <meta name="description" content="QUINTS brengt meerdere standpunten naar één helder consensusdocument. Zonder de menselijke beslissing over te nemen.">
+    <link rel="icon" type="image/svg+xml" href="assets/sovareq-logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      /* ── YuniTrack page ── */
+      .site-overlay { display: none; }
+
+      /* Circular belt overlay */
+      .yt-overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(92vw, 92vh);
+        aspect-ratio: 1;
+        pointer-events: none;
+        z-index: 0;
+        color: var(--color-ink);
+      }
+
+      .yt-main {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── Hero ── */
+      .yt-hero {
+        padding: var(--space-10) var(--space-6) var(--space-6);
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .yt-hero a.sg-back { display: inline-flex; align-items: center; gap: var(--space-1); font-size: .85rem; opacity: .55; text-decoration: none; color: var(--color-ink); margin-bottom: var(--space-4); transition: opacity .15s; }
+      .yt-hero a.sg-back:hover { opacity: 1; }
+      .yt-hero .section-label { display: block; margin-bottom: var(--space-3); }
+      .yt-hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 var(--space-3); }
+      .yt-hero .yt-tagline { font-size: clamp(1.1rem, 2.5vw, 1.35rem); font-weight: 600; margin: 0 0 var(--space-4); opacity: .9; }
+      .yt-hero .yt-sub { font-size: clamp(.9rem, 1.6vw, 1.05rem); opacity: .72; line-height: 1.65; max-width: 520px; margin: 0 auto var(--space-6); }
+
+      /* ── Intro ── */
+      .yt-intro { max-width: 680px; margin: 0 auto; padding: 0 var(--space-6) var(--space-8); text-align: center; }
+      .yt-intro p { font-size: clamp(.9rem, 1.6vw, 1.05rem); opacity: .75; line-height: 1.7; margin: 0 0 var(--space-3); }
+
+      /* ── Content grid ── */
+      .yt-blocks { max-width: 980px; margin: 0 auto; padding: 0 var(--space-6) var(--space-8); }
+      .yt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); }
+
+      /* Block 4 (blue) gets accent styling */
+      .yt-block-card.blue { border-top-color: var(--color-accent); }
+      .yt-block-num { font-size: .7rem; letter-spacing: .1em; opacity: .4; margin-bottom: var(--space-2); font-weight: 600; }
+
+      /* ── What / What not ── */
+      .yt-scope { max-width: 680px; margin: 0 auto var(--space-8); padding: 0 var(--space-6); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+      @media (max-width: 560px) { .yt-scope { grid-template-columns: 1fr; } }
+      .yt-scope-block h3 { font-size: .95rem; font-weight: 700; margin: 0 0 var(--space-2); }
+      .yt-scope-block p  { font-size: .9rem; opacity: .72; line-height: 1.65; margin: 0; }
+
+      /* ── Aanpak ── */
+      .yt-aanpak { max-width: 600px; margin: 0 auto var(--space-8); padding: 0 var(--space-6); }
+      .yt-aanpak h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; margin-bottom: var(--space-4); }
+      .yt-aanpak p  { font-size: .95rem; opacity: .75; line-height: 1.7; margin-bottom: var(--space-3); }
+      .yt-aanpak blockquote { border-left: 3px solid var(--color-accent); margin: var(--space-6) 0 0; padding-left: var(--space-4); font-size: 1.05rem; font-style: italic; opacity: .82; }
+
+      /* ── Contact ── */
+      .yt-contact { max-width: 540px; margin: 0 auto var(--space-8); padding: 0 var(--space-6); text-align: center; }
+      .yt-contact p { opacity: .75; font-size: .95rem; line-height: 1.7; margin-bottom: var(--space-4); }
+      .yt-contact a.btn-primary { display: inline-block; }
+
+      /* ── Technical signals ── */
+      .yt-signals { max-width: 680px; margin: 0 auto var(--space-8); padding: 0 var(--space-6); }
+      .yt-signals-grid { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+      .yt-signal-tag { font-size: .78rem; padding: 4px 10px; border: 1px solid rgba(128,128,128,.25); border-radius: 2px; font-family: var(--font-mono, monospace); opacity: .7; }
+
+      /* ── Belt SVG elements ── */
+      .yt-belt-ring  { fill: none; stroke: currentColor; stroke-width: 40; stroke-opacity: 0.06; }
+      .yt-ring-outer { fill: none; stroke: currentColor; stroke-width: 1; stroke-opacity: 0.08; }
+      .yt-ring-inner { fill: none; stroke: currentColor; stroke-width: 1; stroke-opacity: 0.05; }
+      .yt-center     { fill: currentColor; fill-opacity: 0.06; }
+      .yt-block-path { }
+      .yt-validator-body { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-opacity: 0.28; }
+      .yt-validator-flash { fill: #cc3030; fill-opacity: 0; }
+    </style>
+  </head>
+  <body>
+
+    <div class="portrait-gate" role="alertdialog" aria-label="Oriëntatie vereist">
+      <span class="portrait-gate-label">Sovareq — Oriëntatieverificatie</span>
+      <svg class="portrait-gate-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="12" y="4" width="24" height="40" rx="4" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="24" cy="38" r="2" fill="currentColor"/>
+        <line x1="16" y1="9" x2="32" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h2>Oriëntatie vereist</h2>
+      <p>Draai uw apparaat naar landschapsmodus om door te gaan.</p>
+      <span class="portrait-gate-rule">Beleid: Schermoriëntatie — Artikel 1</span>
+    </div>
+
+    <!-- ── Circular belt background ── -->
+    <div class="yt-overlay" aria-hidden="true">
+      <svg id="yt-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- Belt track ring -->
+        <circle cx="200" cy="200" r="130" class="yt-belt-ring"/>
+        <!-- Outer decoration ring -->
+        <circle cx="200" cy="200" r="172" class="yt-ring-outer"/>
+        <!-- Inner decoration ring -->
+        <circle cx="200" cy="200" r="88" class="yt-ring-inner"/>
+        <!-- Center dot -->
+        <circle cx="200" cy="200" r="3" class="yt-center"/>
+        <!-- 5 animated blocks (paths filled by JS) -->
+        <path id="yt-b0" class="yt-block-path" fill="currentColor" fill-opacity="0.10"/>
+        <path id="yt-b1" class="yt-block-path" fill="currentColor" fill-opacity="0.10"/>
+        <path id="yt-b2" class="yt-block-path" fill="currentColor" fill-opacity="0.10"/>
+        <path id="yt-b3" class="yt-block-path" fill="var(--color-accent)" fill-opacity="0.28"/>
+        <path id="yt-b4" class="yt-block-path" fill="currentColor" fill-opacity="0.10"/>
+        <!-- Validator position indicator at 10 o'clock (240°) -->
+        <!-- Validator at r=158, angle=240°: x=200+158*cos(240°)=200-79=121, y=200+158*sin(240°)=200-136.9=63.1 -->
+        <rect id="yt-validator" class="yt-validator-body"
+              x="113" y="55" width="16" height="16" rx="1.5"
+              transform="rotate(-30 121 63)"/>
+        <!-- Red flash overlay on validator -->
+        <rect id="yt-validator-flash" class="yt-validator-flash"
+              x="113" y="55" width="16" height="16" rx="1.5"
+              transform="rotate(-30 121 63)"/>
+        <!-- Small tick at validator position on outer ring -->
+        <line x1="159" y1="80" x2="148" y2="69" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.20"/>
+      </svg>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Sovareq">
+        <img class="brand-mark" src="assets/sovareq-logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Sovareq</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="main-nav" aria-label="Navigatie">
+        <a href="sovaguard.html" data-i18n="nav.product">Sovaguard</a>
+        <a href="yunitrack.html" data-i18n="nav.yunitrack">YuniTrack</a>
+        <a href="sovacount.html" data-i18n="nav.sovacount">SovaCount</a>
+        <a href="quints.html" data-i18n="nav.quints" aria-current="page">QUINTS</a>
+        <a href="origin.html" data-i18n="nav.origin">Origin</a>
+        <a href="index.html#aanpak" data-i18n="nav.approach">Aanpak</a>
+        <button class="theme-btn" id="theme-btn" aria-label="Thema wisselen">◐</button>
+        <div class="lang-toggle" role="group" aria-label="Taal / Langue / Language">
+          <button class="lang-btn" data-lang="nl" aria-pressed="true">NL</button>
+          <button class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
+          <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <div class="tone-toggle" role="group" aria-label="Toonlaag">
+          <button class="tone-btn active" data-tone="precision" aria-pressed="true">Precisie</button>
+          <button class="tone-btn" data-tone="clear" aria-pressed="false">Helder</button>
+        </div>
+        <a href="index.html#contact" class="nav-cta" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="yt-main">
+
+      <section class="yt-hero">
+        <a class="sg-back" href="index.html">← <span data-i18n="sg.back">Terug</span></a>
+        <span class="section-label">Module · 04</span>
+        <h1 data-tone-key="hero_title">QUINTS</h1>
+        <p class="yt-tagline" data-tone-key="hero_tagline">Het vijfde element in het denkproces.</p>
+        <p class="yt-sub" data-tone-key="hero_sub">QUINTS komt van het Latijnse quintus — het vijfde. In besluitvorming zijn er vaak meerdere losse perspectieven. Verschillende belangen, visies, zorgen, prioriteiten. Die perspectieven zijn nodig, maar ze vormen nog geen besluit. Het besluit ontstaat pas in de vijfde stap.</p>
+      </section>
+
+      <section class="yt-intro">
+        <p data-tone-key="intro_p1">Die vijfde stap is geen stemming. Geen compromis. Geen gemiddelde. Geen opgepoetste samenvatting.</p>
+        <p data-tone-key="intro_p2">Het is synthese. QUINTS is gebouwd voor dat vijfde moment: het punt waarop meerdere standpunten naast elkaar liggen, de spanningen zichtbaar worden, en er één helder consensusdocument kan ontstaan zonder de verschillen weg te wissen.</p>
+      </section>
+
+      <section class="yt-aanpak">
+        <h2>Wat QUINTS niet vraagt</h2>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li>Wie heeft gelijk?</li>
+        </ul>
+      </section>
+
+      <section class="yt-aanpak">
+        <h2>Wat QUINTS wel vraagt</h2>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li>Wat blijft overeind als we alles naast elkaar leggen?</li>
+        </ul>
+      </section>
+
+      <section class="yt-aanpak">
+        <h2>QUINTS — Quantified Unbiased Insight Navigating Towards Synthesis</h2>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li>Q · Quantified — standpunten en spanningen worden expliciet gemaakt.</li>
+          <li>U · Unbiased — geen partij, geen voorkeur. Input ligt naast elkaar.</li>
+          <li>I · Insight — geen meer tekst, beter zicht.</li>
+          <li>N · Navigating — begeleiding richting helderheid, geen forcering.</li>
+          <li>T · Towards — een gerichte beweging, geen oneindige discussie.</li>
+          <li>S · Synthesis — één bruikbaar document zonder de verschillen te vervalsen.</li>
+        </ul>
+      </section>
+
+      <section class="yt-aanpak">
+        <blockquote data-tone-key="kernzin">QUINTS ordent, distilleert en maakt zichtbaar. De mens beslist.</blockquote>
+      </section>
+
+      <section class="yt-aanpak">
+        <h2>Positie in de stack</h2>
+        <p>QUINTS wordt later opgezet als Rust-gebaseerde module die op YuniTrack kan worden gemount. Wanneer gemount: SovaGuard controleert gevoelige input, YuniTrack registreert intentie en route, QUINTS voert de synthese uit, de gebruiker keurt het consensusdocument goed of af.</p>
+        <p style="font-family:var(--font-mono);font-size:.8rem;color:var(--color-accent);letter-spacing:.04em;margin-top:var(--space-4);">Status: concept en richting. De Rust-port en YuniTrack-mount zijn in voorbereiding.</p>
+      </section>
+
+      <section class="yt-contact">
+        <span class="section-label" data-i18n="contact.label">Contact</span>
+        <p data-tone-key="contact_text">Meer info nodig? Mail Bjorn — direct.</p>
+        <a class="btn-primary" href="mailto:bjorn@sovareq.com">bjorn@sovareq.com</a>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <span data-i18n="footer.company">Sovareq BV · België</span>
+      <span>Privacy by design</span>
+      <span><a href="mailto:bjorn@sovareq.com">bjorn@sovareq.com</a></span>
+      <span>sovareq.com</span>
+      <span data-i18n="footer.privacy">Privacybeleid beschikbaar op aanvraag</span>
+    </footer>
+
+    <script>
+      /* ── i18n (nav/footer only) ── */
+      var T = {
+        nl: { 'nav.product':'Sovaguard','nav.yunitrack':'YuniTrack','nav.sovacount':'SovaCount','nav.quints':'QUINTS','nav.origin':'Origin','nav.approach':'Aanpak','nav.contact':'Contact','approach.label':'Aanpak','contact.label':'Contact','footer.company':'Sovareq BV · België','footer.privacy':'Privacybeleid beschikbaar op aanvraag','sg.back':'Terug' },
+        fr: { 'nav.product':'Sovaguard','nav.yunitrack':'YuniTrack','nav.sovacount':'SovaCount','nav.quints':'QUINTS','nav.origin':'Origin','nav.approach':'Approche','nav.contact':'Contact','approach.label':'Approche','contact.label':'Contact','footer.company':'Sovareq BV · Belgique','footer.privacy':'Politique de confidentialité disponible sur demande','sg.back':'Retour' },
+        en: { 'nav.product':'Sovaguard','nav.yunitrack':'YuniTrack','nav.sovacount':'SovaCount','nav.quints':'QUINTS','nav.origin':'Origin','nav.approach':'Approach','nav.contact':'Contact','approach.label':'Approach','contact.label':'Contact','footer.company':'Sovareq BV · Belgium','footer.privacy':'Privacy policy available on request','sg.back':'Back' },
+      };
+
+      function applyLang(lang) {
+        var dict = T[lang]; if (!dict) return;
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) { var v=dict[el.dataset.i18n]; if(v!==undefined) el.textContent=v; });
+        document.querySelectorAll('.lang-btn').forEach(function(btn) { var a=btn.dataset.lang===lang; btn.classList.toggle('active',a); btn.setAttribute('aria-pressed',a); });
+        try { localStorage.setItem('sq-lang', lang); } catch(e) {}
+      }
+      document.querySelectorAll('.lang-btn').forEach(function(btn){ btn.addEventListener('click', function(){ applyLang(btn.dataset.lang); }); });
+      var savedLang = null; try { savedLang=localStorage.getItem('sq-lang'); } catch(e) {}
+      var browserLang = (navigator.language||'nl').slice(0,2).toLowerCase();
+      applyLang(savedLang || (['nl','fr','en'].indexOf(browserLang)>-1?browserLang:'nl'));
+
+      /* ── Tone texts ── */
+      var toneTexts = {
+        precision: {
+          hero_title:    'QUINTS',
+          hero_tagline:  'Het vijfde element in het denkproces.',
+          hero_sub:      'QUINTS komt van het Latijnse quintus — het vijfde. In besluitvorming zijn er vaak meerdere losse perspectieven. Verschillende belangen, visies, zorgen, prioriteiten. Die perspectieven zijn nodig, maar ze vormen nog geen besluit. Het besluit ontstaat pas in de vijfde stap.',
+          intro_p1:      'Die vijfde stap is geen stemming. Geen compromis. Geen gemiddelde. Geen opgepoetste samenvatting.',
+          intro_p2:      'Het is synthese. QUINTS is gebouwd voor dat vijfde moment: het punt waarop meerdere standpunten naast elkaar liggen, de spanningen zichtbaar worden, en er één helder consensusdocument kan ontstaan zonder de verschillen weg te wissen.',
+          kernzin:       'QUINTS ordent, distilleert en maakt zichtbaar. De mens beslist.',
+          contact_text:  'Meer info nodig? Mail Bjorn — direct.',
+        },
+        clear: {
+          hero_title:    'QUINTS',
+          hero_tagline:  'Van meerdere meningen naar één duidelijk document.',
+          hero_sub:      'Soms heeft een groep meerdere visies, en moet er één duidelijke richting uit komen. QUINTS legt die visies naast elkaar en maakt er één leesbaar consensusdocument van. Zonder dat het systeem voor jou beslist.',
+          intro_p1:      'QUINTS forceert geen keuze.',
+          intro_p2:      'Het systeem ordent wat verschillende mensen denken en bouwt daar één leesbaar document uit. Wat verschilt, blijft verschillen. Wat overlapt, wordt zichtbaar.',
+          kernzin:       'Het systeem ordent. De mens beslist.',
+          contact_text:  'Meer info? Mail Bjorn.',
+        },
+      };
+
+      function applyTone(tone) {
+        var texts = toneTexts[tone]; if (!texts) return;
+        document.querySelectorAll('[data-tone-key]').forEach(function(el) {
+          var v = texts[el.dataset.toneKey];
+          if (v !== undefined) el.textContent = v;
+        });
+        document.querySelectorAll('.tone-btn').forEach(function(btn) {
+          var a = btn.dataset.tone === tone;
+          btn.classList.toggle('active', a);
+          btn.setAttribute('aria-pressed', a);
+        });
+        try { localStorage.setItem('sq-tone', tone); } catch(e) {}
+      }
+
+      document.querySelectorAll('.tone-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() { applyTone(btn.dataset.tone); });
+      });
+
+      /* Init tone */
+      var savedTone = null; try { savedTone = localStorage.getItem('sq-tone'); } catch(e) {}
+      applyTone(savedTone === 'clear' ? 'clear' : 'precision');
+
+      /* ── Nav hamburger ── */
+      (function() {
+        var toggle = document.getElementById('nav-toggle');
+        var nav = document.getElementById('main-nav');
+        if (!toggle || !nav) return;
+        function close() { nav.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); toggle.textContent='☰'; }
+        toggle.addEventListener('click', function() {
+          var open = nav.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', open);
+          toggle.textContent = open ? '✕' : '☰';
+        });
+        document.addEventListener('keydown', function(e) { if (e.key==='Escape') close(); });
+        nav.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', close); });
+      })();
+
+      /* ── Theme toggle ── */
+      (function() {
+        var btn = document.getElementById('theme-btn');
+        var html = document.documentElement;
+        var saved = null; try { saved = localStorage.getItem('sq-theme'); } catch(e) {}
+        if (saved === 'light') html.setAttribute('data-theme','light');
+        if (btn) btn.addEventListener('click', function() {
+          var isLight = html.getAttribute('data-theme') === 'light';
+          if (isLight) { html.removeAttribute('data-theme'); try{localStorage.setItem('sq-theme','dark');}catch(e){} }
+          else { html.setAttribute('data-theme','light'); try{localStorage.setItem('sq-theme','light');}catch(e){} }
+        });
+      })();
+
+      /* ── Circular belt animation ── */
+      (function() {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var cx = 200, cy = 200;
+        var R_OUT = 150, R_IN = 110;
+        var PERIOD_MS = 3800;      /* one full revolution */
+        var HEARTBEAT_MS = 800;
+        var RED_FLASH_MS = 200;
+
+        /* Block layout: same proportions as side-view belt (36px block, 10px gap, 230px tile) */
+        var BLOCK_DEG = 36 / 230 * 360;   /* ≈ 56.35° */
+        var GAP_DEG   = 10 / 230 * 360;   /* ≈ 15.65° */
+        var PITCH_DEG = BLOCK_DEG + GAP_DEG; /* ≈ 72° */
+
+        /* 5 blocks: 0=white,1=white,2=white,3=BLUE(4th),4=white */
+        var blockStarts = [0, PITCH_DEG, 2*PITCH_DEG, 3*PITCH_DEG, 4*PITCH_DEG];
+        var blockEls = [
+          document.getElementById('yt-b0'),
+          document.getElementById('yt-b1'),
+          document.getElementById('yt-b2'),
+          document.getElementById('yt-b3'),
+          document.getElementById('yt-b4'),
+        ];
+        var validatorFlash = document.getElementById('yt-validator-flash');
+
+        /* Validator at 10 o'clock = 240° in SVG angle system (0=right, CW) */
+        var VALIDATOR_DEG = 240;
+
+        /* Blue block center at rot=0 */
+        var BLUE_CENTER_0 = 3 * PITCH_DEG + BLOCK_DEG / 2; /* ≈ 244.2° */
+
+        var heartbeatStart = null;
+        var redFlashStart  = null;
+        var blueCount      = 0;
+        var lastBlueDeg    = BLUE_CENTER_0;
+        var startTime      = performance.now();
+
+        function toRad(d) { return d * Math.PI / 180; }
+
+        function arcPath(a1r, a2r) {
+          var large = (a2r - a1r > Math.PI) ? 1 : 0;
+          var ox1 = cx + R_OUT * Math.cos(a1r), oy1 = cy + R_OUT * Math.sin(a1r);
+          var ox2 = cx + R_OUT * Math.cos(a2r), oy2 = cy + R_OUT * Math.sin(a2r);
+          var ix2 = cx + R_IN  * Math.cos(a2r), iy2 = cy + R_IN  * Math.sin(a2r);
+          var ix1 = cx + R_IN  * Math.cos(a1r), iy1 = cy + R_IN  * Math.sin(a1r);
+          return 'M'+ox1+' '+oy1+' A'+R_OUT+' '+R_OUT+' 0 '+large+' 1 '+ox2+' '+oy2
+               + ' L'+ix2+' '+iy2+' A'+R_IN+' '+R_IN+' 0 '+large+' 0 '+ix1+' '+iy1+'Z';
+        }
+
+        function normDeg(d) { return ((d % 360) + 360) % 360; }
+
+        function tick(now) {
+          var elapsed = now - startTime;
+          var rotDeg  = (elapsed / PERIOD_MS * 360) % 360;
+
+          /* Current blue center angle */
+          var blueDeg = normDeg(BLUE_CENTER_0 + rotDeg);
+          var prev    = normDeg(lastBlueDeg);
+
+          /* Detect crossing of VALIDATOR_DEG */
+          var crossed = false;
+          if (blueDeg >= prev) {
+            crossed = prev <= VALIDATOR_DEG && blueDeg > VALIDATOR_DEG;
+          } else {
+            /* Wrapped around 360 */
+            crossed = prev <= VALIDATOR_DEG || blueDeg > VALIDATOR_DEG;
+          }
+          if (crossed) {
+            heartbeatStart = now;
+            blueCount++;
+            if (blueCount % 3 === 0) redFlashStart = now;
+          }
+          lastBlueDeg = blueDeg;
+
+          /* Draw blocks */
+          for (var i = 0; i < 5; i++) {
+            var a1r = toRad(blockStarts[i] + rotDeg);
+            var a2r = toRad(blockStarts[i] + BLOCK_DEG + rotDeg);
+            var p   = arcPath(a1r, a2r);
+            if (blockEls[i]) blockEls[i].setAttribute('d', p);
+
+            /* Blue heartbeat */
+            if (i === 3 && blockEls[3]) {
+              var inBeat = heartbeatStart && (now - heartbeatStart) < HEARTBEAT_MS;
+              if (inBeat) {
+                var t = (now - heartbeatStart) / HEARTBEAT_MS;
+                /* Peak at t=0.4, ease in/out */
+                var brightness = t < 0.4 ? t / 0.4 : 1 - (t - 0.4) / 0.6;
+                var op = 0.28 + 0.72 * brightness;
+                blockEls[3].setAttribute('fill-opacity', op.toFixed(3));
+              } else {
+                blockEls[3].setAttribute('fill-opacity', '0.28');
+              }
+            }
+          }
+
+          /* Validator red flash */
+          if (validatorFlash) {
+            if (redFlashStart && (now - redFlashStart) < RED_FLASH_MS) {
+              var rp = (now - redFlashStart) / RED_FLASH_MS;
+              var rop = (1 - rp) * 0.45;
+              validatorFlash.setAttribute('fill-opacity', rop.toFixed(3));
+            } else {
+              validatorFlash.setAttribute('fill-opacity', '0');
+            }
+          }
+
+          requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+      })();
+    </script>
+  </body>
+</html>

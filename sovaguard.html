@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sovaguard | Sovareq</title>
+    <meta name="description"
+      content="Sovaguard — privacy-first LLM-proxy met PII-detectie en geketende audit-trail.">
+    <link rel="icon" type="image/svg+xml" href="assets/sovareq-logo.svg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      /* ── Sovaguard page — overlay as background ── */
+      .sg-overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(90vw, calc(90vh * 360 / 435));
+        aspect-ratio: 360 / 435;
+        pointer-events: none;
+        z-index: 0;
+        color: var(--color-ink);
+      }
+      .sg-overlay .ring-outer   { stroke-opacity: 0.13; }
+      .sg-overlay .ring-inner   { stroke-opacity: 0.35; }
+      .sg-overlay .rail         { stroke-opacity: 0; }
+      .sg-overlay .bar-white    { fill-opacity:   0.10; }
+      .sg-overlay .bar-blue     { fill-opacity:   0.40; }
+      .sg-overlay .overlay-text { fill-opacity:   0.06; font-family: var(--font-sans); font-weight: 700; }
+
+      /* hide the default site-overlay on this page */
+      .site-overlay { display: none; }
+
+      .sg-main {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sg-hero {
+        padding: var(--space-10) var(--space-6) var(--space-8);
+        max-width: min(420px, 56vw, calc(56vh * 360 / 435));
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .sg-hero .section-label { display: block; margin-bottom: var(--space-3); }
+
+      .sg-hero h1 {
+        font-size: clamp(1.9rem, 4.5vw, 3.2rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin: 0 0 var(--space-4);
+      }
+
+      .sg-hero .sg-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        opacity: 0.72;
+        max-width: 100%;
+        margin: 0 auto var(--space-6);
+        line-height: 1.65;
+      }
+
+      .sg-features {
+        padding: var(--space-6) var(--space-6) var(--space-10);
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .sg-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-4);
+        margin-bottom: var(--space-6);
+      }
+
+      .sg-compliance {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        justify-content: center;
+      }
+
+      .sg-back {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        font-size: 0.85rem;
+        opacity: 0.55;
+        text-decoration: none;
+        color: var(--color-ink);
+        margin-bottom: var(--space-4);
+        transition: opacity 0.15s;
+      }
+      .sg-back:hover { opacity: 1; }
+
+      .sg-hero .sg-sub p { margin: 0 0 var(--space-3); font-size: clamp(0.9rem, 1.6vw, 1.05rem); opacity: 0.72; line-height: 1.65; }
+      .sg-hero .sg-sub p:last-child { margin-bottom: 0; }
+      .feat-text p { margin: 0 0 var(--space-2); font-size: var(--text-sm); color: var(--color-ink-muted); line-height: 1.7; }
+      .feat-text p:last-child { margin-bottom: 0; }
+
+      .sg-intercept, .sg-limits {
+        max-width: 680px;
+        margin: 0 auto var(--space-8);
+        padding: 0 var(--space-6);
+      }
+      .sg-intercept h2, .sg-limits h2 {
+        font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+        font-weight: 700;
+        margin: 0 0 var(--space-3);
+      }
+      .sg-intercept-text p, .sg-limits-text p {
+        font-size: clamp(.9rem, 1.6vw, 1.05rem);
+        opacity: .75;
+        line-height: 1.7;
+        margin: 0 0 var(--space-3);
+      }
+      .sg-intercept-text p:last-child, .sg-limits-text p:last-child { margin-bottom: 0; }
+
+      .sg-quote {
+        max-width: 540px;
+        margin: 0 auto var(--space-10);
+        padding: 0 var(--space-6) 0 var(--space-8);
+        border-left: 3px solid var(--color-accent);
+        font-size: clamp(1rem, 2vw, 1.15rem);
+        font-style: italic;
+        opacity: .82;
+        line-height: 1.55;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="portrait-gate" role="alertdialog" aria-label="Oriëntatie vereist">
+      <span class="portrait-gate-label">Sovareq — Oriëntatieverificatie</span>
+      <svg class="portrait-gate-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="12" y="4" width="24" height="40" rx="4" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="24" cy="38" r="2" fill="currentColor"/>
+        <line x1="16" y1="9" x2="32" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h2>Oriëntatie vereist</h2>
+      <p>Draai uw apparaat naar landschapsmodus om door te gaan.</p>
+      <span class="portrait-gate-rule">Beleid: Schermoriëntatie — Artikel 1</span>
+    </div>
+
+    <!-- Animated overlay as background -->
+    <div class="sg-overlay" aria-hidden="true">
+      <svg class="overlay-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 435">
+        <defs>
+          <clipPath id="belt-clip">
+            <circle cx="180" cy="180" r="164"/>
+          </clipPath>
+          <pattern id="belt-pat" x="0" y="104" width="230" height="84"
+                   patternUnits="userSpaceOnUse">
+            <rect class="bar-white" x="0"   y="0" width="36" height="84" fill="currentColor"/>
+            <rect class="bar-white" x="46"  y="0" width="36" height="84" fill="currentColor"/>
+            <rect class="bar-white" x="92"  y="0" width="36" height="84" fill="currentColor"/>
+            <rect class="bar-blue"  x="138" y="0" width="36" height="84" fill="var(--color-accent)"/>
+            <rect class="bar-white" x="184" y="0" width="36" height="84" fill="currentColor"/>
+          </pattern>
+        </defs>
+        <circle class="ring-outer" cx="180" cy="180" r="176"
+                fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle class="ring-inner" cx="180" cy="180" r="167"
+                fill="none" stroke="var(--color-accent)" stroke-width="4"/>
+        <g clip-path="url(#belt-clip)">
+          <line class="rail" x1="0" y1="200" x2="360" y2="200"
+                stroke="currentColor" stroke-width="2"/>
+          <line class="rail" x1="0" y1="232" x2="360" y2="232"
+                stroke="currentColor" stroke-width="2"/>
+          <rect x="0" y="104" width="360" height="84" fill="url(#belt-pat)"/>
+        </g>
+        <text class="overlay-text" x="180" y="417"
+              font-size="58" text-anchor="middle" letter-spacing="3"
+              fill="currentColor">SOVAREQ</text>
+      </svg>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Sovareq">
+        <img class="brand-mark" src="assets/sovareq-logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Sovareq</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="main-nav" aria-label="Navigatie">
+        <a href="sovaguard.html" data-i18n="nav.product" aria-current="page">Sovaguard</a>
+        <a href="yunitrack.html" data-i18n="nav.yunitrack">YuniTrack</a>
+        <a href="sovacount.html" data-i18n="nav.sovacount">SovaCount</a>
+        <a href="quints.html" data-i18n="nav.quints">QUINTS</a>
+        <a href="origin.html" data-i18n="nav.origin">Origin</a>
+        <a href="index.html#aanpak" data-i18n="nav.approach">Aanpak</a>
+        <button class="theme-btn" id="theme-btn" aria-label="Thema wisselen">◐</button>
+        <div class="lang-toggle" role="group" aria-label="Taal / Langue / Language">
+          <button class="lang-btn" data-lang="nl" aria-pressed="true">NL</button>
+          <button class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
+          <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <div class="tone-toggle" role="group" aria-label="Toonlaag">
+          <button class="tone-btn active" data-tone="precision" aria-pressed="true">Precisie</button>
+          <button class="tone-btn" data-tone="clear" aria-pressed="false">Helder</button>
+        </div>
+        <a href="index.html#contact" class="nav-cta" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="sg-main">
+
+      <section class="sg-hero">
+        <a class="sg-back" href="index.html">← <span data-i18n="sg.back">Terug</span></a>
+        <span class="section-label" data-i18n="product.label">Product</span>
+        <h1 data-tone-key="hero_title">Sovaguard</h1>
+        <div class="sg-sub" data-i18n="product.sub" data-tone-key="hero_sub">
+          <p>Een privacygerichte LLM-proxy voor organisaties die AI-verkeer willen controleren, loggen en begrenzen voordat gevoelige gegevens of beslissingen het systeem verlaten.</p>
+          <p>Sovaguard ondersteunt PII-detectie, beleidscontrole en auditbare logging rond AI-gebruik.</p>
+        </div>
+      </section>
+
+      <section class="sg-features">
+        <div class="sg-grid">
+          <div class="feature-card">
+            <div class="feature-label" data-i18n="feat.pii.label" data-tone-key="feat_pii_label">PII-detectie</div>
+            <div class="feat-text" data-i18n="feat.pii.text" data-tone-key="feat_pii_text">
+              <p>Sovaguard herkent meerdere categorieën persoonsgegevens, waaronder identificatienummers, financiële gegevens, gezondheidsinformatie en locatiegegevens.</p>
+              <p>Waar mogelijk worden formaat-, structuur- en checksumcontroles gebruikt om detecties te onderbouwen en onnodige blokkering te beperken.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-label" data-i18n="feat.audit.label" data-tone-key="feat_audit_label">Auditbare logging</div>
+            <div class="feat-text" data-i18n="feat.audit.text" data-tone-key="feat_audit_text">
+              <p>Gebeurtenissen worden vastgelegd in een geketende auditlog op basis van cryptografische integriteitscontrole.</p>
+              <p>Zo ontstaat een controleerbaar spoor van prompts, acties, beleidsbeslissingen en systeemreacties, bruikbaar voor interne review, incidentanalyse en compliance-verantwoording.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-label" data-i18n="feat.gov.label" data-tone-key="feat_gov_label">Beleidscontrole</div>
+            <div class="feat-text" data-i18n="feat.gov.text" data-tone-key="feat_gov_text">
+              <p>Sovaguard helpt vastleggen wie welke AI-functies mag gebruiken, onder welke voorwaarden en met welke logging.</p>
+              <p>Wanneer regels ontbreken, conflicteren of onvoldoende context bieden, kan het systeem een gecontroleerde stop afdwingen in plaats van door te gaan op aannames.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-label" data-i18n="feat.vendor.label" data-tone-key="feat_vendor_label">Leveranciersonafhankelijk</div>
+            <div class="feat-text" data-i18n="feat.vendor.text" data-tone-key="feat_vendor_text">
+              <p>Sovaguard is ontworpen om niet vast te zitten aan een specifieke LLM-provider of modelversie.</p>
+              <p>Organisaties behouden ruimte om hun eigen connectoren, modellen en infrastructuurkeuzes te maken, terwijl governance en auditlogica consistent blijven.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-compliance compliance-row" data-tone-key="compliance_tags">
+          <span class="compliance-tag">GDPR Art. 5 + 30</span>
+          <span class="compliance-tag">NIS2 BE</span>
+          <span class="compliance-tag">AI Act Art. 50</span>
+          <span class="compliance-tag">DORA</span>
+          <span class="compliance-tag">CAO 109</span>
+        </div>
+      </section>
+
+      <section class="sg-intercept">
+        <h2 data-tone-key="intercept_title">Controle voor AI-verkeer</h2>
+        <div class="sg-intercept-text" data-tone-key="intercept_text">
+          <p>Sovaguard plaatst beleidscontrole, PII-detectie en auditlogging tussen organisatie en LLM-provider.</p>
+          <p>Daarmee wordt AI-verkeer niet alleen doorgestuurd, maar beoordeeld, beperkt en vastgelegd volgens vooraf bepaalde regels.</p>
+        </div>
+      </section>
+
+      <section class="sg-limits">
+        <h2 data-tone-key="limits_title">Wat Sovaguard niet doet</h2>
+        <div class="sg-limits-text" data-tone-key="limits_text">
+          <p>Sovaguard vervangt geen privacybeleid, DPIA, juridisch advies of formele compliancebeoordeling.</p>
+          <p>Het levert een technische controle- en auditlaag die zulke processen kan ondersteunen.</p>
+        </div>
+      </section>
+
+      <blockquote class="sg-quote" data-tone-key="quote">AI-governance begint waar AI-verkeer de organisatie verlaat.</blockquote>
+
+    </main>
+
+    <footer class="site-footer">
+      <span data-i18n="footer.company">Sovareq BV · België</span>
+      <span>Privacy by design</span>
+      <span><a href="mailto:bjorn@sovareq.com">bjorn@sovareq.com</a></span>
+      <span>sovareq.com</span>
+      <span data-i18n="footer.privacy">Privacybeleid beschikbaar op aanvraag</span>
+    </footer>
+
+    <script>
+      var T = {
+        nl: {
+          'nav.product':      'Sovaguard',
+          'nav.yunitrack':    'YuniTrack',
+          'nav.sovacount':    'SovaCount',
+          'nav.quints':       'QUINTS',
+          'nav.origin':       'Origin',
+          'nav.approach':     'Aanpak',
+          'nav.contact':      'Contact',
+          'product.label':    'Product',
+          'product.sub':      'Een privacygerichte LLM-proxy voor organisaties die AI-verkeer willen controleren, loggen en begrenzen voordat gevoelige gegevens of beslissingen het systeem verlaten. Sovaguard ondersteunt PII-detectie, beleidscontrole en auditbare logging rond AI-gebruik.',
+          'feat.pii.label':   'PII-detectie',
+          'feat.pii.text':    'Sovaguard herkent meerdere categorieën persoonsgegevens, waaronder identificatienummers, financiële gegevens, gezondheidsinformatie en locatiegegevens. Waar mogelijk worden formaat-, structuur- en checksumcontroles gebruikt om detecties te onderbouwen en onnodige blokkering te beperken.',
+          'feat.audit.label': 'Auditbare logging',
+          'feat.audit.text':  'Gebeurtenissen worden vastgelegd in een geketende auditlog op basis van cryptografische integriteitscontrole. Zo ontstaat een controleerbaar spoor van prompts, acties, beleidsbeslissingen en systeemreacties, bruikbaar voor interne review, incidentanalyse en compliance-verantwoording.',
+          'feat.gov.label':   'Beleidscontrole',
+          'feat.gov.text':    'Sovaguard helpt vastleggen wie welke AI-functies mag gebruiken, onder welke voorwaarden en met welke logging. Wanneer regels ontbreken, conflicteren of onvoldoende context bieden, kan het systeem een gecontroleerde stop afdwingen in plaats van door te gaan op aannames.',
+          'feat.vendor.label':'Leveranciersonafhankelijk',
+          'feat.vendor.text': 'Sovaguard is ontworpen om niet vast te zitten aan een specifieke LLM-provider of modelversie. Organisaties behouden ruimte om hun eigen connectoren, modellen en infrastructuurkeuzes te maken, terwijl governance en auditlogica consistent blijven.',
+          'footer.company':   'Sovareq BV · België',
+          'footer.privacy':   'Privacybeleid beschikbaar op aanvraag',
+          'sg.back':          'Terug',
+        },
+        fr: {
+          'nav.product':      'Sovaguard',
+          'nav.yunitrack':    'YuniTrack',
+          'nav.sovacount':    'SovaCount',
+          'nav.quints':       'QUINTS',
+          'nav.origin':       'Origin',
+          'nav.approach':     'Approche',
+          'nav.contact':      'Contact',
+          'product.label':    'Produit',
+          'product.sub':      "Un proxy LLM axé sur la confidentialité pour les organisations qui souhaitent contrôler, journaliser et délimiter le trafic IA avant que des données sensibles ou des décisions ne quittent le système. Sovaguard prend en charge la détection PII, le contrôle des politiques et la journalisation auditée autour de l'usage de l'IA.",
+          'feat.pii.label':   'Détection PII',
+          'feat.pii.text':    "Sovaguard reconnaît plusieurs catégories de données personnelles, dont les numéros d'identification, les données financières, les informations de santé et les données de localisation. Des contrôles de format, de structure et de somme de contrôle sont utilisés dans la mesure du possible pour étayer les détections et limiter les blocages inutiles.",
+          'feat.audit.label': 'Journalisation auditée',
+          'feat.audit.text':  "Les événements sont consignés dans un journal d'audit chaîné basé sur un contrôle cryptographique d'intégrité. Il en résulte une piste vérifiable de prompts, d'actions, de décisions de politique et de réponses système, utilisable pour la revue interne, l'analyse d'incidents et la justification de conformité.",
+          'feat.gov.label':   'Contrôle des politiques',
+          'feat.gov.text':    "Sovaguard aide à définir qui peut utiliser quelles fonctions IA, dans quelles conditions et avec quelle journalisation. Lorsque les règles sont absentes, contradictoires ou manquent de contexte, le système peut imposer un arrêt contrôlé plutôt que de continuer sur des hypothèses.",
+          'feat.vendor.label':'Indépendant du fournisseur',
+          'feat.vendor.text': "Sovaguard est conçu pour ne pas être lié à un fournisseur LLM ou une version de modèle spécifique. Les organisations conservent la liberté de faire leurs propres choix de connecteurs, de modèles et d'infrastructure, tandis que la gouvernance et la logique d'audit restent cohérentes.",
+          'footer.company':   'Sovareq BV · Belgique',
+          'footer.privacy':   'Politique de confidentialité disponible sur demande',
+          'sg.back':          'Retour',
+        },
+                en: {
+          'nav.product':      'Sovaguard',
+          'nav.yunitrack':    'YuniTrack',
+          'nav.sovacount':    'SovaCount',
+          'nav.quints':       'QUINTS',
+          'nav.origin':       'Origin',
+          'nav.approach':     'Approach',
+          'nav.contact':      'Contact',
+          'product.label':    'Product',
+          'product.sub':      'A privacy-focused LLM proxy for organisations that want to monitor, log and constrain AI traffic before sensitive data or decisions leave the system. Sovaguard supports PII detection, policy control and auditable logging around AI usage.',
+          'feat.pii.label':   'PII detection',
+          'feat.pii.text':    'Sovaguard recognises multiple categories of personal data, including identification numbers, financial data, health information and location data. Where possible, format, structure and checksum controls are used to substantiate detections and reduce unnecessary blocking.',
+          'feat.audit.label': 'Auditable logging',
+          'feat.audit.text':  'Events are recorded in a chained audit log based on cryptographic integrity control. This creates a verifiable trail of prompts, actions, policy decisions and system responses, usable for internal review, incident analysis and compliance accountability.',
+          'feat.gov.label':   'Policy control',
+          'feat.gov.text':    'Sovaguard helps define who may use which AI functions, under what conditions and with what logging. When rules are missing, conflicting or lack sufficient context, the system can enforce a controlled stop rather than continuing on assumptions.',
+          'feat.vendor.label':'Vendor-independent',
+          'feat.vendor.text': 'Sovaguard is designed not to be tied to a specific LLM provider or model version. Organisations retain the freedom to make their own connector, model and infrastructure choices, while governance and audit logic remain consistent.',
+          'footer.company':   'Sovareq BV · Belgium',
+          'footer.privacy':   'Privacy policy available on request',
+          'sg.back':          'Back',
+        },
+      };
+
+      /* Tone content */
+      var toneTexts = {
+        precision: {
+          hero_title: 'Sovaguard',
+          hero_sub: '<p>Een privacygerichte LLM-proxy voor organisaties die AI-verkeer willen controleren, loggen en begrenzen voordat gevoelige gegevens of beslissingen het systeem verlaten.</p><p>Sovaguard ondersteunt PII-detectie, beleidscontrole en auditbare logging rond AI-gebruik.</p>',
+          feat_pii_label: 'PII-detectie',
+          feat_pii_text: '<p>Sovaguard herkent meerdere categorieën persoonsgegevens, waaronder identificatienummers, financiële gegevens, gezondheidsinformatie en locatiegegevens.</p><p>Waar mogelijk worden formaat-, structuur- en checksumcontroles gebruikt om detecties te onderbouwen en onnodige blokkering te beperken.</p>',
+          feat_audit_label: 'Auditbare logging',
+          feat_audit_text: '<p>Gebeurtenissen worden vastgelegd in een geketende auditlog op basis van cryptografische integriteitscontrole.</p><p>Zo ontstaat een controleerbaar spoor van prompts, acties, beleidsbeslissingen en systeemreacties, bruikbaar voor interne review, incidentanalyse en compliance-verantwoording.</p>',
+          feat_gov_label: 'Beleidscontrole',
+          feat_gov_text: '<p>Sovaguard helpt vastleggen wie welke AI-functies mag gebruiken, onder welke voorwaarden en met welke logging.</p><p>Wanneer regels ontbreken, conflicteren of onvoldoende context bieden, kan het systeem een gecontroleerde stop afdwingen in plaats van door te gaan op aannames.</p>',
+          feat_vendor_label: 'Leveranciersonafhankelijk',
+          feat_vendor_text: '<p>Sovaguard is ontworpen om niet vast te zitten aan een specifieke LLM-provider of modelversie.</p><p>Organisaties behouden ruimte om hun eigen connectoren, modellen en infrastructuurkeuzes te maken, terwijl governance en auditlogica consistent blijven.</p>',
+          compliance_tags: '<span class="compliance-tag">GDPR Art. 5 + 30</span><span class="compliance-tag">NIS2 BE</span><span class="compliance-tag">AI Act Art. 50</span><span class="compliance-tag">DORA</span><span class="compliance-tag">CAO 109</span>',
+          intercept_title: 'Controle voor AI-verkeer',
+          intercept_text: '<p>Sovaguard plaatst beleidscontrole, PII-detectie en auditlogging tussen organisatie en LLM-provider.</p><p>Daarmee wordt AI-verkeer niet alleen doorgestuurd, maar beoordeeld, beperkt en vastgelegd volgens vooraf bepaalde regels.</p>',
+          limits_title: 'Wat Sovaguard niet doet',
+          limits_text: '<p>Sovaguard vervangt geen privacybeleid, DPIA, juridisch advies of formele compliancebeoordeling.</p><p>Het levert een technische controle- en auditlaag die zulke processen kan ondersteunen.</p>',
+          quote: 'AI-governance begint waar AI-verkeer de organisatie verlaat.',
+        },
+        clear: {
+          hero_title: 'Sovaguard',
+          hero_sub: '<p>Sovaguard helpt organisaties AI gebruiken zonder de controle over gevoelige gegevens, regels en logging te verliezen.</p><p>Het systeem kijkt mee voordat informatie naar een AI-model gaat en legt vast wat relevant is voor controle achteraf.</p>',
+          feat_pii_label: 'Gevoelige gegevens herkennen',
+          feat_pii_text: '<p>Sovaguard helpt gevoelige informatie herkennen voordat die in AI-verkeer terechtkomt.</p><p>Denk aan identiteitsgegevens, financiële gegevens, gezondheidsinformatie of locatiegegevens. Waar mogelijk controleert het systeem ook of een detectie technisch klopt.</p>',
+          feat_audit_label: 'Een controleerbaar spoor',
+          feat_audit_text: '<p>Sovaguard houdt bij wat er rond AI-gebruik gebeurt.</p><p>Als er later vragen komen, is zichtbaar welke actie plaatsvond, welke regel meespeelde en welke informatie nodig is voor controle of onderzoek.</p>',
+          feat_gov_label: 'Regels toepassen',
+          feat_gov_text: '<p>Sovaguard helpt bepalen wat wel en niet mag bij AI-gebruik.</p><p>Als de regels niet duidelijk genoeg zijn, kan het systeem stoppen in plaats van toch door te gaan.</p>',
+          feat_vendor_label: 'Niet vast aan een AI-leverancier',
+          feat_vendor_text: '<p>Sovaguard is bedoeld om met verschillende AI-modellen en leveranciers te kunnen werken.</p><p>Zo kan een organisatie eigen technische keuzes blijven maken, terwijl regels en logging op dezelfde manier blijven werken.</p>',
+          compliance_tags: '<span class="compliance-tag">Privacyprincipes</span><span class="compliance-tag">Cyberweerbaarheid</span><span class="compliance-tag">AI-transparantie</span><span class="compliance-tag">Digitale operationele weerbaarheid</span><span class="compliance-tag">Arbeidsrechtelijke verantwoording</span>',
+          intercept_title: 'Eerst controleren, dan doorsturen',
+          intercept_text: '<p>Sovaguard werkt als controlepunt tussen de organisatie en het AI-model.</p><p>Voordat informatie verdergaat, kijkt het systeem of gevoelige data, regels of logging aandacht nodig hebben.</p>',
+          limits_title: 'Wat Sovaguard niet belooft',
+          limits_text: '<p>Sovaguard maakt AI-gebruik niet automatisch compliant.</p><p>Het helpt wel om gevoelige gegevens, regels en logging beter te beheren, zodat controle en verantwoording eenvoudiger worden.</p>',
+          quote: 'Controle begint voordat informatie naar een AI-model gaat.',
+        },
+      };
+
+      var currentLang = 'nl';
+      var currentTone = 'precision';
+
+      function applyToneContent(tone) {
+        var texts = toneTexts[tone];
+        if (!texts) return;
+        document.querySelectorAll('[data-tone-key]').forEach(function(el) {
+          var key = el.dataset.toneKey;
+          if (texts[key] === undefined) return;
+          var val = texts[key];
+          if (val.indexOf('<') > -1) el.innerHTML = val;
+          else el.textContent = val;
+        });
+      }
+
+      function applyTone(tone) {
+        currentTone = tone;
+        document.querySelectorAll('.tone-btn').forEach(function(btn) {
+          var active = btn.dataset.tone === tone;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', active);
+        });
+        try { localStorage.setItem('sq-tone', tone); } catch(e) {}
+        if (currentLang === 'nl') applyToneContent(tone);
+      }
+
+      document.querySelectorAll('.tone-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() { applyTone(btn.dataset.tone); });
+      });
+
+      function applyLang(lang) {
+        currentLang = lang;
+        var dict = T[lang];
+        if (!dict) return;
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          var v = dict[el.dataset.i18n];
+          if (v !== undefined) el.textContent = v;
+        });
+        document.querySelectorAll('.lang-btn').forEach(function(btn) {
+          var active = btn.dataset.lang === lang;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', active);
+        });
+        try { localStorage.setItem('sq-lang', lang); } catch(e) {}
+        if (lang === 'nl') applyToneContent(currentTone);
+      }
+
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() { applyLang(btn.dataset.lang); });
+      });
+
+      var savedLang = null, savedToneInit = null;
+      try { savedLang = localStorage.getItem('sq-lang'); } catch(e) {}
+      try { savedToneInit = localStorage.getItem('sq-tone'); } catch(e) {}
+      currentTone = savedToneInit || 'precision';
+      var browser = (navigator.language || 'nl').slice(0, 2).toLowerCase();
+      var initLang = savedLang || (['nl','fr','en'].indexOf(browser) > -1 ? browser : 'nl');
+      applyLang(initLang);
+      applyTone(currentTone);
+
+      /* Theme toggle */
+      (function() {
+        var btn = document.getElementById('theme-btn');
+        var html = document.documentElement;
+        var saved = null;
+        try { saved = localStorage.getItem('sq-theme'); } catch(e) {}
+        if (saved === 'light') html.setAttribute('data-theme', 'light');
+        if (btn) btn.addEventListener('click', function() {
+          var isLight = html.getAttribute('data-theme') === 'light';
+          if (isLight) {
+            html.removeAttribute('data-theme');
+            try { localStorage.setItem('sq-theme', 'dark'); } catch(e) {}
+          } else {
+            html.setAttribute('data-theme', 'light');
+            try { localStorage.setItem('sq-theme', 'light'); } catch(e) {}
+          }
+        });
+      })();
+
+      /* Nav hamburger */
+      (function() {
+        var toggle = document.getElementById('nav-toggle');
+        var nav = document.getElementById('main-nav');
+        if (!toggle || !nav) return;
+        function close() { nav.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); toggle.textContent='☰'; }
+        toggle.addEventListener('click', function() {
+          var open = nav.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', open);
+          toggle.textContent = open ? '✕' : '☰';
+        });
+        document.addEventListener('keydown', function(e) { if (e.key==='Escape') close(); });
+        nav.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', close); });
+      })();
+      /* Belt animation */
+      (function() {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var pat = document.getElementById('belt-pat');
+        if (!pat) return;
+        var start = performance.now();
+        function tick() {
+          var x = ((performance.now() - start) / 10000 * 230) % 230;
+          pat.setAttribute('patternTransform', 'translate(' + x.toFixed(2) + ',0)');
+        }
+        (function loop() { tick(); requestAnimationFrame(loop); })();
+        setInterval(tick, 50);
+      })();
+    </script>
+  </body>
+</html>

@@ -11,6 +11,18 @@
   </head>
   <body>
 
+    <div class="portrait-gate" role="alertdialog" aria-label="Oriëntatie vereist">
+      <span class="portrait-gate-label">Sovareq — Oriëntatieverificatie</span>
+      <svg class="portrait-gate-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="12" y="4" width="24" height="40" rx="4" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="24" cy="38" r="2" fill="currentColor"/>
+        <line x1="16" y1="9" x2="32" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h2>Oriëntatie vereist</h2>
+      <p>Draai uw apparaat naar landschapsmodus om door te gaan.</p>
+      <span class="portrait-gate-rule">Beleid: Schermoriëntatie — Artikel 1</span>
+    </div>
+
     <div class="site-overlay" aria-hidden="true">
       <svg class="overlay-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 435">
         <defs>
@@ -48,14 +60,23 @@
         <img class="brand-mark" src="assets/sovareq-logo.svg" alt="" width="36" height="36">
         <span class="brand-name">Sovareq</span>
       </a>
-      <nav class="main-nav" aria-label="Navigatie">
-        <a href="#sovaguard" data-i18n="nav.product">Sovaguard</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="main-nav" aria-label="Navigatie">
+        <a href="sovaguard.html" data-i18n="nav.product">Sovaguard</a>
+        <a href="yunitrack.html" data-i18n="nav.yunitrack">YuniTrack</a>
+        <a href="sovacount.html" data-i18n="nav.sovacount">SovaCount</a>
+        <a href="quints.html" data-i18n="nav.quints">QUINTS</a>
+        <a href="origin.html" data-i18n="nav.origin">Origin</a>
         <a href="#aanpak" data-i18n="nav.approach">Aanpak</a>
         <button class="theme-btn" id="theme-btn" aria-label="Thema wisselen">◐</button>
         <div class="lang-toggle" role="group" aria-label="Taal / Langue / Language">
           <button class="lang-btn" data-lang="nl" aria-pressed="true">NL</button>
           <button class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
           <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <div class="tone-toggle" role="group" aria-label="Toonlaag">
+          <button class="tone-btn active" data-tone="precision" aria-pressed="true">Precisie</button>
+          <button class="tone-btn" data-tone="clear" aria-pressed="false">Helder</button>
         </div>
         <a href="#contact" class="nav-cta" data-i18n="nav.contact">Contact</a>
       </nav>
@@ -199,100 +220,112 @@
       var T = {
         nl: {
           'nav.product':      'Sovaguard',
+          'nav.yunitrack':    'YuniTrack',
+          'nav.sovacount':    'SovaCount',
+          'nav.quints':       'QUINTS',
+          'nav.origin':       'Origin',
           'nav.approach':     'Aanpak',
           'nav.contact':      'Contact',
           'hero.label':       'Sovareq — AI Governance',
-          'hero.h1':          'AI mag helpen.<br>Nooit zonder bestuur.',
-          'hero.sub':         'Sovareq bouwt systemen waarin AI werkt binnen vaste grenzen. Elke actie herleidbaar. Privacy by design. Bestuurbaar wanneer het er toe doet.',
-          'hero.cta':         'Neem contact op',
+          'hero.h1':          'AI toepassen vraagt bestuur.',
+          'hero.sub':         'Sovareq ontwikkelt governance- en controletechnologie voor organisaties die AI willen inzetten binnen duidelijke beleids-, privacy- en auditgrenzen. De focus ligt op herleidbaarheid, gegevensbescherming en bestuurbare besluitvorming.',
+          'hero.cta':         'Bespreek de toepassing',
           'metrics.pii':      'PII-klassen',
           'metrics.audit':    'Audit-keten standaard',
           'metrics.deps':     'Externe productie-deps',
           'metrics.frameworks':'Regelgevingskaders',
           'product.label':    'Product',
-          'product.sub':      'Privacy-first LLM-proxy met PII-detectie en geketende audit-trail. Gebouwd voor organisaties die AI inzetten met echte verantwoordelijkheid.',
+          'product.sub':      'Een privacygerichte LLM-proxy voor organisaties die AI-verkeer willen controleren, loggen en begrenzen voordat gevoelige gegevens of beslissingen het systeem verlaten. Sovaguard ondersteunt PII-detectie, beleidscontrole en auditbare logging rond AI-gebruik.',
           'feat.pii.label':   'PII-detectie',
-          'feat.pii.text':    '23 klassen — van IBAN en rijksregisternummer tot gezondheidsgegevens en GPS-coördinaten. Valse positieven worden gefilterd via checksum-validatie op formaat en structuur.',
-          'feat.audit.label': 'Audit-keten',
-          'feat.audit.text':  'Elke gebeurtenis is HMAC-SHA256-geketend. Eén bit-flip breekt de keten. Controleerbaar bewijs per run, per actie, per beslissing — zonder handmatige tussenkomst.',
-          'feat.gov.label':   'Governance',
-          'feat.gov.text':    'Wie mag wat doen, op basis van welke regel, met welk bewijs. Discriminatie-risico-detectie met signalen relevant voor Art. 9 GDPR en CAO 109. Gecontroleerde stop wanneer regels ontbreken of onduidelijk zijn.',
-          'feat.vendor.label':'Vendor-agnostisch',
-          'feat.vendor.text': 'Geen lock-in op LLM-provider. Geen hardcoded model-IDs. Geen externe SDK-afhankelijkheden in productie-code. De organisatie kiest zelf de connector en behoudt de controle.',
+          'feat.pii.text':    'Sovaguard herkent meerdere categorieën persoonsgegevens, waaronder identificatienummers, financiële gegevens, gezondheidsinformatie en locatiegegevens. Waar mogelijk worden formaat-, structuur- en checksumcontroles gebruikt om detecties te onderbouwen en onnodige blokkering te beperken.',
+          'feat.audit.label': 'Auditbare logging',
+          'feat.audit.text':  'Gebeurtenissen worden vastgelegd in een geketende auditlog op basis van cryptografische integriteitscontrole. Zo ontstaat een controleerbaar spoor van prompts, acties, beleidsbeslissingen en systeemreacties, bruikbaar voor interne review, incidentanalyse en compliance-verantwoording.',
+          'feat.gov.label':   'Beleidscontrole',
+          'feat.gov.text':    'Sovaguard helpt vastleggen wie welke AI-functies mag gebruiken, onder welke voorwaarden en met welke logging. Wanneer regels ontbreken, conflicteren of onvoldoende context bieden, kan het systeem een gecontroleerde stop afdwingen in plaats van door te gaan op aannames.',
+          'feat.vendor.label':'Leveranciersonafhankelijk',
+          'feat.vendor.text': 'Sovaguard is ontworpen om niet vast te zitten aan een specifieke LLM-provider of modelversie. Organisaties behouden ruimte om hun eigen connectoren, modellen en infrastructuurkeuzes te maken, terwijl governance en auditlogica consistent blijven.',
           'approach.label':   'Aanpak',
-          'approach.h2':      'Eerst gebruiken.<br>Dan bouwen.',
-          'approach.p1':      'Sovareq bouwt geen software vanuit verkooplogica. Elk systeem ontstaat uit eigen frictie — een probleem dat dagelijks onder druk wordt getest voordat het relevant is voor anderen.',
-          'approach.p2':      'De kern is governance: wie mag wat doen, op basis van welke regel, met welk bewijs. Een systeem is pas bruikbaar wanneer het op het juiste moment kan stoppen. Niet doorgaan. Niet raden. Niet maskeren. Een gecontroleerde stop is geen falen — het is een veiligheidslaag.',
-          'approach.p3':      'Elk onderdeel moet een reden hebben. Elk veld, elke log, elke stopregel moet in de praktijk nut hebben. Software is pas volwassen wanneer ze niet alleen werkt op een mooie dag, maar ook wanneer de input rommelig is, de opdracht onduidelijk is of de druk hoog wordt.',
-          'approach.quote':   'Software moet vertrouwen afdwingen. Niet beloven.',
+          'approach.h2':      'Eerst beheersen.<br>Dan opschalen.',
+          'approach.p1':      'Sovareq vertrekt niet vanuit AI als doel op zich, maar vanuit de vraag welke controle een organisatie nodig heeft om AI verantwoord te kunnen gebruiken.',
+          'approach.p2':      'De kern is governance: wie mag wat doen, op basis van welke regel, met welke data en met welk bewijs achteraf. Een volwassen AI-systeem is niet het systeem dat altijd antwoordt. Het is het systeem dat weet wanneer het moet beperken, vertragen of stoppen.',
+          'approach.p3':      'Daarom bouwt Sovareq rond duidelijke grenzen, technische herleidbaarheid en praktische toepasbaarheid onder operationele druk.',
+          'approach.quote':   'Vertrouwen in AI ontstaat niet door beloftes, maar door controleerbare werking.',
           'contact.label':    'Contact',
-          'contact.h2':       'Rechtstreeks.',
+          'contact.h2':       'Rechtstreeks contact.',
           'footer.company':   'Sovareq BV · België',
           'footer.privacy':   'Privacybeleid beschikbaar op aanvraag',
         },
         fr: {
           'nav.product':      'Sovaguard',
+          'nav.yunitrack':    'YuniTrack',
+          'nav.sovacount':    'SovaCount',
+          'nav.quints':       'QUINTS',
+          'nav.origin':       'Origin',
           'nav.approach':     'Approche',
           'nav.contact':      'Contact',
           'hero.label':       'Sovareq — Gouvernance IA',
-          'hero.h1':          "L’IA peut aider.<br>Jamais sans gouvernance.",
-          'hero.sub':         "Sovareq construit des systèmes où l’IA opère dans des limites fixes. Chaque action traçable. Privacy by design. Gouvernable quand ça compte.",
-          'hero.cta':         'Nous contacter',
+          'hero.h1':          "Déployer l'IA exige une gouvernance.",
+          'hero.sub':         "Sovareq développe des technologies de gouvernance et de contrôle pour les organisations souhaitant déployer l'IA dans des limites claires de politique, de confidentialité et d'audit. L'accent est mis sur la traçabilité, la protection des données et la prise de décision pilotable.",
+          'hero.cta':         "Discuter de l'application",
           'metrics.pii':      'Classes PII',
-          'metrics.audit':    "Standard chaîne d’audit",
+          'metrics.audit':    "Standard chaîne d'audit",
           'metrics.deps':     'Dépend. production externes',
           'metrics.frameworks':'Cadres réglementaires',
           'product.label':    'Produit',
-          'product.sub':      "Proxy LLM privacy-first avec détection PII et piste d’audit chaînée. Conçu pour les organisations déployant l’IA avec une responsabilité réelle.",
+          'product.sub':      "Un proxy LLM axé sur la confidentialité pour les organisations qui souhaitent contrôler, journaliser et délimiter le trafic IA avant que des données sensibles ou des décisions ne quittent le système. Sovaguard prend en charge la détection PII, le contrôle des politiques et la journalisation auditée autour de l'usage de l'IA.",
           'feat.pii.label':   'Détection PII',
-          'feat.pii.text':    "23 classes — de l’IBAN et du numéro national aux données de santé et coordonnées GPS. Les faux positifs sont filtrés par validation de somme de contrôle sur le format et la structure.",
-          'feat.audit.label': "Chaîne d’audit",
-          'feat.audit.text':  "Chaque événement est chaîné HMAC-SHA256. Un seul bit-flip brise la chaîne. Preuve vérifiable par run, par action, par décision — sans intervention manuelle.",
-          'feat.gov.label':   'Gouvernance',
-          'feat.gov.text':    "Qui peut faire quoi, selon quelle règle, avec quelle preuve. Détection de risque de discrimination avec des signaux pertinents pour l’Art. 9 RGPD et CCT 109. Arrêt contrôlé quand les règles manquent ou sont floues.",
-          'feat.vendor.label':'Agnostique',
-          'feat.vendor.text': "Aucun lock-in sur le fournisseur LLM. Aucun ID de modèle codé en dur. Aucune dépendance SDK externe dans le code de production. L’organisation choisit son propre connecteur et conserve le contrôle.",
+          'feat.pii.text':    "Sovaguard reconnaît plusieurs catégories de données personnelles, dont les numéros d'identification, les données financières, les informations de santé et les données de localisation. Des contrôles de format, de structure et de somme de contrôle sont utilisés dans la mesure du possible pour étayer les détections et limiter les blocages inutiles.",
+          'feat.audit.label': 'Journalisation auditée',
+          'feat.audit.text':  "Les événements sont consignés dans un journal d'audit chaîné basé sur un contrôle cryptographique d'intégrité. Il en résulte une piste vérifiable de prompts, d'actions, de décisions de politique et de réponses système, utilisable pour la revue interne, l'analyse d'incidents et la justification de conformité.",
+          'feat.gov.label':   'Contrôle des politiques',
+          'feat.gov.text':    "Sovaguard aide à définir qui peut utiliser quelles fonctions IA, dans quelles conditions et avec quelle journalisation. Lorsque les règles sont absentes, contradictoires ou manquent de contexte, le système peut imposer un arrêt contrôlé plutôt que de continuer sur des hypothèses.",
+          'feat.vendor.label':'Indépendant du fournisseur',
+          'feat.vendor.text': "Sovaguard est conçu pour ne pas être lié à un fournisseur LLM ou une version de modèle spécifique. Les organisations conservent la liberté de faire leurs propres choix de connecteurs, de modèles et d'infrastructure, tandis que la gouvernance et la logique d'audit restent cohérentes.",
           'approach.label':   'Approche',
-          'approach.h2':      "Utiliser d’abord.<br>Ensuite construire.",
-          'approach.p1':      "Sovareq ne construit pas de logiciels selon une logique commerciale. Chaque système naît de sa propre friction — un problème testé quotidiennement sous pression avant d’être pertinent pour d’autres.",
-          'approach.p2':      "Le cœur est la gouvernance : qui peut faire quoi, selon quelle règle, avec quelle preuve. Un système n’est utilisable que lorsqu’il peut s’arrêter au bon moment. Ne pas continuer. Ne pas deviner. Ne pas masquer. Un arrêt contrôlé n’est pas un échec — c’est une couche de sécurité.",
-          'approach.p3':      "Chaque composant doit avoir une raison d’être. Chaque champ, chaque log, chaque règle d’arrêt doit avoir une utilité pratique. Un logiciel n’est mature que lorsqu’il fonctionne non seulement par beau temps, mais aussi lorsque les données sont désordonnées, la mission floue ou la pression élevée.",
-          'approach.quote':   'Le logiciel doit imposer la confiance. Pas la promettre.',
+          'approach.h2':      "D'abord maîteriser.<br>Ensuite déployer.",
+          'approach.p1':      "Sovareq ne part pas de l'IA comme d'une fin en soi, mais de la question de quel contrôle une organisation a besoin pour pouvoir utiliser l'IA de manière responsable.",
+          'approach.p2':      "Le cœur est la gouvernance : qui peut faire quoi, selon quelle règle, avec quelles données et avec quelle preuve a posteriori. Un système IA mature n'est pas le système qui répond toujours. C'est le système qui sait quand il doit limiter, ralentir ou s'arrêter.",
+          'approach.p3':      "C'est pourquoi Sovareq construit autour de limites claires, de traçabilité technique et d'applicabilité pratique sous pression opérationnelle.",
+          'approach.quote':   "La confiance dans l'IA ne naît pas des promesses, mais d'un fonctionnement contrôlable.",
           'contact.label':    'Contact',
-          'contact.h2':       'Direct.',
+          'contact.h2':       'Contact direct.',
           'footer.company':   'Sovareq BV · Belgique',
           'footer.privacy':   'Politique de confidentialité disponible sur demande',
         },
-        en: {
+                en: {
           'nav.product':      'Sovaguard',
+          'nav.yunitrack':    'YuniTrack',
+          'nav.sovacount':    'SovaCount',
+          'nav.quints':       'QUINTS',
+          'nav.origin':       'Origin',
           'nav.approach':     'Approach',
           'nav.contact':      'Contact',
           'hero.label':       'Sovareq — AI Governance',
-          'hero.h1':          'AI may assist.<br>Never without governance.',
-          'hero.sub':         'Sovareq builds systems in which AI operates within fixed boundaries. Every action traceable. Privacy by design. Governable when it matters.',
-          'hero.cta':         'Get in touch',
+          'hero.h1':          'Deploying AI requires governance.',
+          'hero.sub':         'Sovareq develops governance and control technology for organisations seeking to deploy AI within clear policy, privacy and audit boundaries. The focus is on traceability, data protection and governable decision-making.',
+          'hero.cta':         'Discuss the application',
           'metrics.pii':      'PII classes',
           'metrics.audit':    'Audit chain standard',
           'metrics.deps':     'External production deps',
           'metrics.frameworks':'Regulatory frameworks',
           'product.label':    'Product',
-          'product.sub':      'Privacy-first LLM proxy with PII detection and chained audit trail. Built for organisations deploying AI with genuine accountability.',
+          'product.sub':      'A privacy-focused LLM proxy for organisations that want to monitor, log and constrain AI traffic before sensitive data or decisions leave the system. Sovaguard supports PII detection, policy control and auditable logging around AI usage.',
           'feat.pii.label':   'PII detection',
-          'feat.pii.text':    '23 classes — from IBAN and national ID numbers to health data and GPS coordinates. False positives filtered via checksum validation on format and structure.',
-          'feat.audit.label': 'Audit chain',
-          'feat.audit.text':  'Every event is HMAC-SHA256-chained. A single bit-flip breaks the chain. Verifiable proof per run, per action, per decision — without manual intervention.',
-          'feat.gov.label':   'Governance',
-          'feat.gov.text':    'Who may do what, based on which rule, with what evidence. Discrimination-risk detection with signals relevant to Art. 9 GDPR and CBA 109. Controlled stop when rules are missing or unclear.',
-          'feat.vendor.label':'Vendor-agnostic',
-          'feat.vendor.text': 'No lock-in on LLM provider. No hardcoded model IDs. No external SDK dependencies in production code. The organisation chooses its own connector and retains control.',
+          'feat.pii.text':    'Sovaguard recognises multiple categories of personal data, including identification numbers, financial data, health information and location data. Where possible, format, structure and checksum controls are used to substantiate detections and reduce unnecessary blocking.',
+          'feat.audit.label': 'Auditable logging',
+          'feat.audit.text':  'Events are recorded in a chained audit log based on cryptographic integrity control. This creates a verifiable trail of prompts, actions, policy decisions and system responses, usable for internal review, incident analysis and compliance accountability.',
+          'feat.gov.label':   'Policy control',
+          'feat.gov.text':    'Sovaguard helps define who may use which AI functions, under what conditions and with what logging. When rules are missing, conflicting or lack sufficient context, the system can enforce a controlled stop rather than continuing on assumptions.',
+          'feat.vendor.label':'Vendor-independent',
+          'feat.vendor.text': 'Sovaguard is designed not to be tied to a specific LLM provider or model version. Organisations retain the freedom to make their own connector, model and infrastructure choices, while governance and audit logic remain consistent.',
           'approach.label':   'Approach',
-          'approach.h2':      'Use first.<br>Then build.',
-          'approach.p1':      'Sovareq does not build software from a sales logic. Every system arises from its own friction — a problem tested daily under pressure before it becomes relevant to others.',
-          'approach.p2':      'The core is governance: who may do what, based on which rule, with what evidence. A system is only usable when it can stop at the right moment. Not continue. Not guess. Not mask. A controlled stop is not a failure — it is a safety layer.',
-          'approach.p3':      'Every component must have a reason. Every field, every log, every stop rule must have practical use. Software is only mature when it works not just on a good day, but also when input is messy, the assignment unclear, or the pressure high.',
-          'approach.quote':   'Software must enforce trust. Not promise it.',
+          'approach.h2':      'First control.<br>Then scale.',
+          'approach.p1':      'Sovareq does not start from AI as an end in itself, but from the question of what control an organisation needs to use AI responsibly.',
+          'approach.p2':      'The core is governance: who may do what, based on which rule, with what data and with what evidence afterwards. A mature AI system is not the system that always responds. It is the system that knows when to restrict, slow down or stop.',
+          'approach.p3':      'That is why Sovareq builds around clear boundaries, technical traceability and practical applicability under operational pressure.',
+          'approach.quote':   'Trust in AI is not created by promises, but by verifiable operation.',
           'contact.label':    'Contact',
-          'contact.h2':       'Direct.',
+          'contact.h2':       'Direct contact.',
           'footer.company':   'Sovareq BV · Belgium',
           'footer.privacy':   'Privacy policy available on request',
         },
@@ -348,6 +381,40 @@
             try { localStorage.setItem('sq-theme', 'light'); } catch(e) {}
           }
         });
+      })();
+
+      /* Nav hamburger */
+      (function() {
+        var toggle = document.getElementById('nav-toggle');
+        var nav = document.getElementById('main-nav');
+        if (!toggle || !nav) return;
+        function close() { nav.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); toggle.textContent='☰'; }
+        toggle.addEventListener('click', function() {
+          var open = nav.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', open);
+          toggle.textContent = open ? '✕' : '☰';
+        });
+        document.addEventListener('keydown', function(e) { if (e.key==='Escape') close(); });
+        nav.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', close); });
+      })();
+
+      /* Tone toggle */
+      (function() {
+        var savedTone = null;
+        try { savedTone = localStorage.getItem('sq-tone'); } catch(e) {}
+        var currentTone = savedTone || 'precision';
+        function applyToneUI(tone) {
+          document.querySelectorAll('.tone-btn').forEach(function(btn) {
+            var active = btn.dataset.tone === tone;
+            btn.classList.toggle('active', active);
+            btn.setAttribute('aria-pressed', active);
+          });
+          try { localStorage.setItem('sq-tone', tone); } catch(e) {}
+        }
+        document.querySelectorAll('.tone-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() { applyToneUI(btn.dataset.tone); });
+        });
+        applyToneUI(currentTone);
       })();
 
       /* Belt animation — 10s period, 230px tile */
